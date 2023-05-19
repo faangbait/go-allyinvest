@@ -1,0 +1,10 @@
+github.com/apsdehal/go-logger v0.0.0-20190515212710-b0d6ccfee0e6 h1:qISSdUEX4sjDHfdD/vf65fhuCh3pIhiILDB7ktjJrqU=
+github.com/apsdehal/go-logger v0.0.0-20190515212710-b0d6ccfee0e6/go.mod h1:U3/8D6R9+bVpX0ORZjV+3mU9pQ86m7h1lESgJbXNvXA=
+github.com/dghubble/oauth1 v0.7.2 h1:pwcinOZy8z6XkNxvPmUDY52M7RDPxt0Xw1zgZ6Cl5JA=
+github.com/dghubble/oauth1 v0.7.2/go.mod h1:9erQdIhqhOHG/7K9s/tgh9Ks/AfoyrO5mW/43Lu2+kE=
+github.com/joho/godotenv v1.5.1 h1:7eLL/+HRGLY0ldzfGMeQkb7vMd0as4CfYvUVzLqw0N0=
+github.com/joho/godotenv v1.5.1/go.mod h1:f4LDr5Voq0i2e/R5DDNOoa2zzDfwtkZa6DnEwAbqwq4=
+github.com/meirf/gopart v0.0.0-20180520194036-37e9492a85a8 h1:7TJiWD1knYDpOAPyFBoKqoyvlsa+UwDw0kv0jVN5Mrk=
+github.com/meirf/gopart v0.0.0-20180520194036-37e9492a85a8/go.mod h1:Uz8uoD6o+eQN19hr6Yro/qKvW+KP6olFq+PK/Nn7gCE=
+golang.org/x/time v0.3.0 h1:rg5rLMjNzMS1RkNLzCG38eapWhnYLFYXDXj2gOlr8j4=
+golang.org/x/time v0.3.0/go.mod h1:tRJNPiyCQ0inRvYxbN9jk5I+vvW/OXSQhTDSoE431IQ=
