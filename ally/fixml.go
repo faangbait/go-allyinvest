@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"log"
+	"strconv"
 )
 
 func prepRender(o *Order) fixmlOrder {
@@ -148,6 +149,8 @@ func FetchOrder(fml *FIXMLFetch) (Order, error) {
 		5: "SHORT",
 	}
 
+	qty, err := strconv.ParseFloat(fml.Rpt.OrdQty.Qty, 64)
+
 	o := Order{
 		Symbol:        fml.Rpt.Instrmt.Sym,
 		SecType:       fml.Rpt.Instrmt.SecTyp,
@@ -155,7 +158,7 @@ func FetchOrder(fml *FIXMLFetch) (Order, error) {
 		Action:        actions[fml.Rpt.Side],
 		OrderType:     order_types[fml.Rpt.Typ],
 		Tif:           tifs[fml.Rpt.TmInForce],
-		TotalQuantity: fml.Rpt.LeavesQty,
+		TotalQuantity: qty,
 		LmtPrice:      fml.Rpt.Px,
 		StopPrice:     fml.Rpt.StopPx,
 		Orig_ID:       fml.Rpt.OrdID,
