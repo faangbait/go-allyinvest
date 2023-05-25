@@ -125,3 +125,41 @@ func RenderChange(o *Order) FIXMLChange {
 		Change:  renderedOrder,
 	}
 }
+
+func FetchOrder(fml *FIXMLFetch) (Order, error) {
+	var err error
+
+	order_types := map[int]string{
+		1: "MKT",
+		2: "LMT",
+		3: "STP",
+		4: "STP LMT",
+	}
+
+	tifs := map[int]string{
+		0: "DAY",
+		1: "GTC",
+		7: "MOC",
+	}
+
+	actions := map[int]string{
+		1: "BUY",
+		2: "SELL",
+		5: "SHORT",
+	}
+
+	o := Order{
+		Symbol:        fml.Rpt.Instrmt.Sym,
+		SecType:       fml.Rpt.Instrmt.SecTyp,
+		Account:       fml.Rpt.Acct,
+		Action:        actions[fml.Rpt.Side],
+		OrderType:     order_types[fml.Rpt.Typ],
+		Tif:           tifs[fml.Rpt.TmInForce],
+		TotalQuantity: fml.Rpt.LeavesQty,
+		LmtPrice:      fml.Rpt.Px,
+		StopPrice:     fml.Rpt.StopPx,
+		Orig_ID:       fml.Rpt.OrdID,
+	}
+
+	return o, err
+}

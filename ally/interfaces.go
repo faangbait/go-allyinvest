@@ -30,6 +30,33 @@ type FIXMLCancel struct {
 	Cancel  fixmlOrder `xml:"OrderCxlReq,omitempty"`
 }
 
+type FIXMLFetch struct {
+	XMLName xml.Name  `xml:"FIXML"`
+	Xmlns   string    `xml:"xmlns,attr"`
+	Rpt     fixmlResp `xml:"ExecRpt"`
+}
+
+type fixmlResp struct {
+	Txt       string       `xml:"Txt,attr"`
+	TxnTm     time.Time    `xml:"TxnTm,attr"`
+	TrdDt     time.Time    `xml:"TrdDt,attr"`
+	LeavesQty float64      `xml:"LeavesQty,attr"`
+	LastPx    float64      `xml:"LastPx,attr"`
+	LastQty   float64      `xml:"LastQty,attr"`
+	TmInForce int          `xml:"TmInForce,attr"`
+	Px        float64      `xml:"Px,attr"`
+	StopPx    float64      `xml:"StopPx,attr"`
+	Typ       int          `xml:"Typ,attr"`
+	Side      int          `xml:"Side,attr"`
+	AcctTyp   int          `xml:"AcctTyp,attr"`
+	Acct      string       `xml:"Acct,attr"`
+	Stat      int          `xml:"Stat,attr"`
+	ID        string       `xml:"ID,attr"`
+	OrdID     string       `xml:"OrdID,attr"`
+	Instrmt   fixmlInstrmt `xml:"Instrmt,omitempty"`
+	OrdQty    fixmlOrdQty  `xml:"OrdQty"`
+}
+
 type fixmlOrder struct {
 	Acct        string       `xml:"Acct,attr"`
 	AcctTyp     string       `xml:"AcctTyp,attr,omitempty"`
