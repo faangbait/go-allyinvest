@@ -85,7 +85,11 @@ func ValidateOrder(o *Order) error {
 // Attempts to handle a warning in the manner determined by the OverrideMap
 // In other words, if making this a Limit order solves our problem, we do that.
 // Returns an error if can't or won't override the warning; this should abort the trade.
-func handleWarning(order *Order, resp IPostOrderWarn) error {
+func handleWarning(order *Order, resp *IPostOrderWarn) error {
+	if resp.Warning.Code == 0 {
+		return nil
+	}
+
 	override := OverrideMap[resp.Warning.Code]
 
 	if !override {
@@ -107,6 +111,8 @@ func handleWarning(order *Order, resp IPostOrderWarn) error {
 			log.Printf("error code %d; overridden\n", resp.Warning.Code)
 		}
 	}
+	resp.Warning.Text = ""
+	resp.Warning.Code = 0
 	return nil
 }
 
@@ -131,31 +137,39 @@ func PostOrder(order *Order) (IPostOrder, error) {
 	// Attempt to post the order.
 	resp, body, err := post[IPostOrder](fmt.Sprintf("accounts/%s/orders", order.Account), data, headers, url.Values{}, tradesRL)
 
-	if resp.Error != "Success" && resp.Error != "" {
-		// Order contained an unhandled error. Assign a custom warning code for later handling.
-		warn.Warning.Text = resp.Error
-
-		switch warn.Warning.Text {
-		case "We are not currently accepting Market orders for this security. Please change your order to a Limit order.":
-			warn.Warning.Code = 2000
-		case "We are not currently accepting Market or Stop orders. Please place a Limit order.":
-			warn.Warning.Code = 2001
-		}
-	} else if err == nil {
-		// Order successfully posted as-is. Woohoo!
-		return resp, nil
-	}
-
-	// Now that we know the order could not post, attempt to unmarshal the response into an IPostOrderWarn
-	err = xml.Unmarshal(body, &warn)
-	log.Printf("order had warnings: %s", warn.Warning.Text)
-
 	if err != nil {
 		return IPostOrder{}, fmt.Errorf("got invalid order response: %s (%s)", Render(order), err.Error())
 	}
 
-	// Handle any warnings; perhaps overriding them.
-	err = handleWarning(order, warn)
+	// Check if order contained an unhandled error and handle the custom warning code.
+	switch resp.Error {
+	case "Success", "":
+		// Order successfully posted as-is. Woohoo!
+		return resp, nil
+	case "We are not currently accepting Market orders for this security. Please change your order to a Limit order.":
+		warn.Warning.Text = resp.Error
+		warn.Warning.Code = 2000
+		err = handleWarning(order, &warn)
+
+	case "We are not currently accepting Market or Stop orders. Please place a Limit order.":
+		warn.Warning.Text = resp.Error
+		warn.Warning.Code = 2001
+		err = handleWarning(order, &warn)
+	}
+
+	if err != nil {
+		return resp, err
+	}
+
+	// Now that we know the order could not post, attempt to unmarshal the response into an IPostOrderWarn.
+	err = xml.Unmarshal(body, &warn)
+	if err != nil {
+		return IPostOrder{}, fmt.Errorf("got invalid order response: %s (%s)", Render(order), err.Error())
+	}
+	log.Printf("order had warnings: %s", warn.Warning.Text)
+
+	// Handle any additional warnings; perhaps overriding them.
+	err = handleWarning(order, &warn)
 
 	if err == nil {
 		if order.Transmit {
