@@ -1,4 +1,4 @@
-package bot
+package main
 
 import (
 	"flag"
@@ -64,7 +64,8 @@ func ManageWarnings() {
 	ally.OverrideMap[ally.MktOrderWhileClosed] = false
 	ally.OverrideMap[ally.ExchangeClosed] = false
 	ally.OverrideMap[ally.ForeignSettlementFee] = false
-
+	ally.OverrideMap[ally.NoMarketOrder1] = true
+	ally.OverrideMap[ally.NoMarketOrder2] = true
 }
 
 type StockType int

@@ -98,13 +98,15 @@ type fixmlOrdQty struct {
 type WarningCode uint16
 
 const (
-	DuplicateOrder       WarningCode = 004 // Instrmt has a pending/open order
-	UnsettledFunds       WarningCode = 233 // No closing until funds settle (free riding)
-	HigherMarginReq      WarningCode = 255 // Margin calls at 50% instead of 30%
-	NotMarginable        WarningCode = 367 // Cash trades only
-	MktOrderWhileClosed  WarningCode = 466 // Fills at open; slippage risk
-	ExchangeClosed       WarningCode = 548 // Extended hours trading (i think)
-	ForeignSettlementFee WarningCode = 563 // Indicates a $50 fee surcharge
+	DuplicateOrder       WarningCode = 004  // Instrmt has a pending/open order
+	UnsettledFunds       WarningCode = 233  // No closing until funds settle (free riding)
+	HigherMarginReq      WarningCode = 255  // Margin calls at 50% instead of 30%
+	NotMarginable        WarningCode = 367  // Cash trades only
+	MktOrderWhileClosed  WarningCode = 466  // Fills at open; slippage risk
+	ExchangeClosed       WarningCode = 548  // Extended hours trading (i think)
+	ForeignSettlementFee WarningCode = 563  // Indicates a $50 fee surcharge
+	NoMarketOrder1       WarningCode = 2000 // We are not currently accepting Market orders for this security. Please change your order to a Limit order.
+	NoMarketOrder2       WarningCode = 2001 // We are not currently accepting Market or Stop orders. Please place a Limit order.
 )
 
 type IProfile struct {
@@ -641,4 +643,5 @@ type Order struct {
 	StopPrice     float64
 	Transmit      bool
 	Orig_ID       string
+	DoNotCoax     bool
 }

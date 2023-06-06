@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strings"
 	"time"
 
 	"github.com/faangbait/go-allyinvest/ally"
-	"github.com/faangbait/go-allyinvest/bot"
 	"github.com/faangbait/go-allyinvest/webserver"
 )
 
@@ -19,9 +19,9 @@ func main() {
 	ally.TrySetEnv()
 	t := time.Now()
 
-	bot.ParseFlags()
+	ParseFlags()
 
-	if *bot.Viewer { // "View Mode" preempts all other operations
+	if *Viewer { // "View Mode" preempts all other operations
 		webserver.Listen()
 	} else {
 		if ally.APIVersion().Version != ClientVersion {
@@ -32,10 +32,15 @@ func main() {
 			fmt.Print(fmt.Errorf("no accounts found! set the ALLY_ACCOUNTS environment variable"))
 		}
 
-		if *bot.Report { // "Report Mode" preempts all automated trading operations
+		if *Report { // "Report Mode" preempts all automated trading operations
 			genReports()
 		} else {
-			err := bot.ExecuteTradingStrategy()
+			f, _ := os.OpenFile("webserver/www/trades.log", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+			log.SetOutput(f)
+			log.Printf("Launched with flags: Auto[%v] Live[%v] Sell[%v] Buy[%v] Report[%v] Viewer[%v] ", *Auto, *Live, *Sell, *Buy, *Report, *Viewer)
+			defer f.Close()
+
+			err := ExecuteTradingStrategy()
 
 			if err != nil {
 				fmt.Print(fmt.Errorf("error running application: %v", err.Error()))

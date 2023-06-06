@@ -15,7 +15,8 @@ import (
 )
 
 const (
-	MINIMUM_STOCK_PRICE = 2.0
+	MINIMUM_STOCK_PX     = 2.0
+	MINIMUM_LMT_POSITION = 100.0
 )
 
 func RequestHeaders() map[string][]string {

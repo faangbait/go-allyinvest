@@ -3,21 +3,10 @@ package ally
 import (
 	"encoding/xml"
 	"fmt"
-	"log"
 	"strconv"
 )
 
 func prepRender(o *Order) fixmlOrder {
-	if o.SecType == "" {
-		o.SecType = "CS"
-	}
-
-	if o.Tif == "MOC" {
-		o.OrderType = ""
-		if o.SecType != "CS" {
-			log.Panicln("Market on Close valid only for Stock contracts")
-		}
-	}
 
 	order_types := map[string]int{
 		"MKT":     1,
