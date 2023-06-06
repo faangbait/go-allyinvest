@@ -121,7 +121,7 @@ func htmlWrapper(tablePositions string, tableAccounts string) string {
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
 	</head>
-	<body>
+	<body class='bg-dark'>
 		<div class="container">
 		%s%s%s
 		</div>
@@ -219,11 +219,11 @@ func htmlPositionLine(idx int, sec ally.Security, sorter Sorter) string {
 	}
 
 	if lastPx > 0 { // Override coloring when stock is near minimum limit
-		if lastPx < ally.MINIMUM_STOCK_PRICE*1.25 {
+		if lastPx < ally.MINIMUM_STOCK_PX*1.25 {
 			lineColor = StrongWarning
 		}
 
-		if lastPx < ally.MINIMUM_STOCK_PRICE {
+		if lastPx < ally.MINIMUM_STOCK_PX {
 			lineColor = StrongDanger
 		}
 	}
