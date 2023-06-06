@@ -90,6 +90,7 @@ func handleWarning(order *Order, resp *IPostOrderWarn) error {
 		return nil
 	}
 
+	log.Printf("order had warnings: %s", resp.Warning.Text)
 	override := OverrideMap[resp.Warning.Code]
 
 	if !override {
@@ -169,7 +170,6 @@ func PostOrder(order *Order) (IPostOrder, error) {
 	if err != nil {
 		return IPostOrder{}, fmt.Errorf("got invalid order response: %s (%s)", Render(order), err.Error())
 	}
-	log.Printf("order had warnings: %s", warn.Warning.Text)
 
 	// Handle any additional warnings; perhaps overriding them.
 	err = handleWarning(order, &warn)
