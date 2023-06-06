@@ -131,7 +131,7 @@ func PostOrder(order *Order) (IPostOrder, error) {
 	// Attempt to post the order.
 	resp, body, err := post[IPostOrder](fmt.Sprintf("accounts/%s/orders", order.Account), data, headers, url.Values{}, tradesRL)
 
-	if resp.Error != "" {
+	if resp.Error != "Success" && resp.Error != "" {
 		// Order contained an unhandled error. Assign a custom warning code for later handling.
 		warn.Warning.Text = resp.Error
 
