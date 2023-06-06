@@ -143,22 +143,25 @@ func PostOrder(order *Order) (IPostOrder, error) {
 
 	// Check if order contained an unhandled error and handle the custom warning code.
 	switch resp.Error {
-	case "Success", "":
+	case "Success":
 		// Order successfully posted as-is. Woohoo!
 		return resp, nil
 	case "We are not currently accepting Market orders for this security. Please change your order to a Limit order.":
 		warn.Warning.Text = resp.Error
 		warn.Warning.Code = 2000
-		err = handleWarning(order, &warn)
-
 	case "We are not currently accepting Market or Stop orders. Please place a Limit order.":
 		warn.Warning.Text = resp.Error
 		warn.Warning.Code = 2001
-		err = handleWarning(order, &warn)
+	case "Due to nightly processing we are unable to accept orders between 11:30 PM and 12:00 AM EST. Please replace your order after 12:00 AM .":
+		warn.Warning.Text = resp.Error
+		warn.Warning.Code = 2002
 	}
 
-	if err != nil {
-		return resp, err
+	if warn.Warning.Code >= 2000 {
+		err = handleWarning(order, &warn)
+		if err != nil {
+			return resp, err
+		}
 	}
 
 	// Now that we know the order could not post, attempt to unmarshal the response into an IPostOrderWarn.
@@ -217,4 +220,5 @@ var OverrideMap = map[WarningCode]bool{
 	ForeignSettlementFee: false,
 	NoMarketOrder1:       false,
 	NoMarketOrder2:       false,
+	MaintenanceWindow:    false,
 }

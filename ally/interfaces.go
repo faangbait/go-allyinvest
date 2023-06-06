@@ -107,6 +107,7 @@ const (
 	ForeignSettlementFee WarningCode = 563  // Indicates a $50 fee surcharge
 	NoMarketOrder1       WarningCode = 2000 // We are not currently accepting Market orders for this security. Please change your order to a Limit order.
 	NoMarketOrder2       WarningCode = 2001 // We are not currently accepting Market or Stop orders. Please place a Limit order.
+	MaintenanceWindow    WarningCode = 2002 // Due to nightly processing we are unable to accept orders between 11:30 PM and 12:00 AM EST.
 )
 
 type IProfile struct {
