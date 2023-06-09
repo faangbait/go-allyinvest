@@ -140,10 +140,18 @@ func FetchOrder(fml *FIXMLFetch) (Order, error) {
 
 	qty, err := strconv.ParseFloat(fml.Rpt.OrdQty.Qty, 64)
 
+	// Please note that account numbers listed in the response for the "Acct" field are given with an additional digit,
+	// normally a "2". For using this account field programically, it may be necessary to remove this last number.
+	acct := fml.Rpt.Acct
+
+	if len(acct) > 8 {
+		acct = acct[:len(acct)-1]
+	}
+
 	o := Order{
 		Symbol:        fml.Rpt.Instrmt.Sym,
 		SecType:       fml.Rpt.Instrmt.SecTyp,
-		Account:       fml.Rpt.Acct,
+		Account:       acct,
 		Action:        actions[fml.Rpt.Side],
 		OrderType:     order_types[fml.Rpt.Typ],
 		Tif:           tifs[fml.Rpt.TmInForce],
