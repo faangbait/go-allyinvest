@@ -44,8 +44,8 @@ type fixmlResp struct {
 	LastPx    float64      `xml:"LastPx,attr,omitempty"`
 	LastQty   float64      `xml:"LastQty,attr,omitempty"`
 	TmInForce int          `xml:"TmInForce,attr"`
-	AvgPx     int          `xml:"AvgPx,attr,omitempty"`
-	CumQty    int          `xml:"CumQty,attr,omitempty"`
+	AvgPx     float64      `xml:"AvgPx,attr,omitempty"`
+	CumQty    float64      `xml:"CumQty,attr,omitempty"`
 	Px        float64      `xml:"Px,attr"`
 	StopPx    float64      `xml:"StopPx,attr"`
 	Typ       int          `xml:"Typ,attr"`
