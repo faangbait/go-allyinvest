@@ -149,13 +149,13 @@ func PostOrder(order *Order) (IPostOrder, error) {
 		return resp, nil
 	case "We are not currently accepting Market orders for this security. Please change your order to a Limit order.":
 		warn.Warning.Text = resp.Error
-		warn.Warning.Code = 2000
+		warn.Warning.Code = NoMarketOrder1
 	case "We are not currently accepting Market or Stop orders. Please place a Limit order.":
 		warn.Warning.Text = resp.Error
-		warn.Warning.Code = 2001
+		warn.Warning.Code = NoMarketOrder2
 	case "Due to nightly processing we are unable to accept orders between 11:30 PM and 12:00 AM EST. Please replace your order after 12:00 AM .":
 		warn.Warning.Text = resp.Error
-		warn.Warning.Code = 2002
+		warn.Warning.Code = MaintenanceWindow
 	}
 
 	if warn.Warning.Code >= 2000 {
