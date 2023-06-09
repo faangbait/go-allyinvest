@@ -37,13 +37,15 @@ type FIXMLFetch struct {
 }
 
 type fixmlResp struct {
-	Txt       string       `xml:"Txt,attr"`
-	TxnTm     time.Time    `xml:"TxnTm,attr"`
-	TrdDt     time.Time    `xml:"TrdDt,attr"`
+	Txt       string       `xml:"Txt,attr,omitempty"`
+	TxnTm     time.Time    `xml:"TxnTm,attr,omitempty"`
+	TrdDt     time.Time    `xml:"TrdDt,attr,omitempty"`
 	LeavesQty float64      `xml:"LeavesQty,attr"`
-	LastPx    float64      `xml:"LastPx,attr"`
-	LastQty   float64      `xml:"LastQty,attr"`
+	LastPx    float64      `xml:"LastPx,attr,omitempty"`
+	LastQty   float64      `xml:"LastQty,attr,omitempty"`
 	TmInForce int          `xml:"TmInForce,attr"`
+	AvgPx     int          `xml:"AvgPx,attr,omitempty"`
+	CumQty    int          `xml:"CumQty,attr,omitempty"`
 	Px        float64      `xml:"Px,attr"`
 	StopPx    float64      `xml:"StopPx,attr"`
 	Typ       int          `xml:"Typ,attr"`
