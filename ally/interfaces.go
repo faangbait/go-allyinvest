@@ -41,13 +41,13 @@ type fixmlResp struct {
 	TxnTm     time.Time    `xml:"TxnTm,attr,omitempty"`
 	TrdDt     time.Time    `xml:"TrdDt,attr,omitempty"`
 	LeavesQty float64      `xml:"LeavesQty,attr"`
-	LastPx    float64      `xml:"LastPx,attr,omitempty"`
-	LastQty   float64      `xml:"LastQty,attr,omitempty"`
-	TmInForce int          `xml:"TmInForce,attr"`
-	AvgPx     float64      `xml:"AvgPx,attr,omitempty"`
 	CumQty    float64      `xml:"CumQty,attr,omitempty"`
+	LastQty   float64      `xml:"LastQty,attr,omitempty"`
+	LastPx    float64      `xml:"LastPx,attr,omitempty"`
 	Px        float64      `xml:"Px,attr"`
 	StopPx    float64      `xml:"StopPx,attr"`
+	AvgPx     float64      `xml:"AvgPx,attr,omitempty"`
+	TmInForce int          `xml:"TmInForce,attr"`
 	Typ       int          `xml:"Typ,attr"`
 	Side      int          `xml:"Side,attr"`
 	AcctTyp   int          `xml:"AcctTyp,attr"`
