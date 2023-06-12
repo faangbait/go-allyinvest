@@ -22,6 +22,10 @@ func Listen() {
 	http.HandleFunc("/", func(resp http.ResponseWriter, req *http.Request) {
 		http.ServeFile(resp, req, repDay)
 	})
+
+	fs := http.FileServer(http.Dir("webserver/www/images"))
+	http.Handle("/images/", http.StripPrefix("/images/", fs))
+
 	http.HandleFunc("/trades", func(resp http.ResponseWriter, req *http.Request) {
 		http.ServeFile(resp, req, logTrades)
 	})

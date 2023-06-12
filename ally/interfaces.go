@@ -37,26 +37,27 @@ type FIXMLFetch struct {
 }
 
 type fixmlResp struct {
-	Txt       string       `xml:"Txt,attr,omitempty"`
-	TxnTm     time.Time    `xml:"TxnTm,attr,omitempty"`
-	TrdDt     time.Time    `xml:"TrdDt,attr,omitempty"`
-	LeavesQty float64      `xml:"LeavesQty,attr"`
-	CumQty    float64      `xml:"CumQty,attr,omitempty"`
-	LastQty   float64      `xml:"LastQty,attr,omitempty"`
-	LastPx    float64      `xml:"LastPx,attr,omitempty"`
-	Px        float64      `xml:"Px,attr"`
-	StopPx    float64      `xml:"StopPx,attr"`
-	AvgPx     float64      `xml:"AvgPx,attr,omitempty"`
-	TmInForce int          `xml:"TmInForce,attr"`
-	Typ       int          `xml:"Typ,attr"`
-	Side      int          `xml:"Side,attr"`
-	AcctTyp   int          `xml:"AcctTyp,attr"`
-	Acct      string       `xml:"Acct,attr"`
-	Stat      int          `xml:"Stat,attr"`
-	ID        string       `xml:"ID,attr"`
-	OrdID     string       `xml:"OrdID,attr"`
-	Instrmt   fixmlInstrmt `xml:"Instrmt,omitempty"`
-	OrdQty    fixmlOrdQty  `xml:"OrdQty"`
+	Txt       string        `xml:"Txt,attr,omitempty"`
+	TxnTm     time.Time     `xml:"TxnTm,attr,omitempty"`
+	TrdDt     time.Time     `xml:"TrdDt,attr,omitempty"`
+	LeavesQty float64       `xml:"LeavesQty,attr"`
+	CumQty    float64       `xml:"CumQty,attr,omitempty"`
+	LastQty   float64       `xml:"LastQty,attr,omitempty"`
+	LastPx    float64       `xml:"LastPx,attr,omitempty"`
+	Px        float64       `xml:"Px,attr"`
+	StopPx    float64       `xml:"StopPx,attr"`
+	AvgPx     float64       `xml:"AvgPx,attr,omitempty"`
+	TmInForce int           `xml:"TmInForce,attr"`
+	Typ       int           `xml:"Typ,attr"`
+	Side      int           `xml:"Side,attr"`
+	AcctTyp   int           `xml:"AcctTyp,attr"`
+	Acct      string        `xml:"Acct,attr"`
+	Stat      int           `xml:"Stat,attr"`
+	ID        string        `xml:"ID,attr"`
+	OrdID     string        `xml:"OrdID,attr"`
+	Instrmt   fixmlInstrmt  `xml:"Instrmt,omitempty"`
+	OrdQty    fixmlOrdQty   `xml:"OrdQty"`
+	FillsGrp  fixmlFillsGrp `xml:"FillsGrp,omitempty"`
 }
 
 type fixmlOrder struct {
@@ -95,6 +96,11 @@ type fixmlInstrmt struct {
 
 type fixmlOrdQty struct {
 	Qty string `xml:"Qty,attr"`
+}
+
+type fixmlFillsGrp struct {
+	FillQty string `xml:"FillQty,attr,omitempty"`
+	FillPx  string `xml:"FillPx,attr,omitempty"`
 }
 
 type WarningCode uint16
