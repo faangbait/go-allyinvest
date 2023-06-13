@@ -322,7 +322,7 @@ type IAccountTransactionDetail struct {
 	Source          string    `xml:"source"`
 	Tradedate       time.Time `xml:"tradedate"`
 	Transactionid   string    `xml:"transactionid"`
-	Transactiontype uint8     `xml:"transactiontype"`
+	Transactiontype string    `xml:"transactiontype"`
 }
 
 type IGetAccountHoldings struct {
