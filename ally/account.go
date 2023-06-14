@@ -27,7 +27,10 @@ func GetAccountBalancesByID(id string) IGetAccountBalance {
 
 // GET accounts/:id/history
 func GetAccountHistory(id string, daterange string, transactions string) IGetAccountHistory {
-	return get[IGetAccountHistory](fmt.Sprintf("accounts/%s/history", id), url.Values{}, authedRL)
+	params := url.Values{}
+	params.Add("range", daterange)
+	params.Add("transactions", transactions)
+	return get[IGetAccountHistory](fmt.Sprintf("accounts/%s/history", id), params, authedRL)
 }
 
 // GET accounts/:id/holdings
