@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"log"
+	"math"
 	"net/url"
 )
 
@@ -101,10 +102,10 @@ func handleWarning(order *Order, resp *IPostOrderWarn) error {
 		case MktOrderWhileClosed, ExchangeClosed, NoMarketOrder1, NoMarketOrder2:
 			if order.OrderType == "MKT" || order.OrderType == "MOC" {
 				order.OrderType = "LMT"
-				order.LmtPrice = resp.FinData.Quote.LastPx
+				order.LmtPrice = math.Max(order.LmtPrice, resp.FinData.Quote.LastPx)
 			} else if order.OrderType == "STP" {
 				order.OrderType = "STP LMT"
-				order.LmtPrice = resp.FinData.Quote.LastPx
+				order.LmtPrice = math.Max(order.LmtPrice, resp.FinData.Quote.LastPx)
 			} else {
 				return fmt.Errorf("error code %d; couldn't override", resp.Warning.Code)
 			}
