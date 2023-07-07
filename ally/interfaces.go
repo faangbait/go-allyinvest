@@ -116,6 +116,8 @@ const (
 	NoMarketOrder1       WarningCode = 2000 // We are not currently accepting Market orders for this security. Please change your order to a Limit order.
 	NoMarketOrder2       WarningCode = 2001 // We are not currently accepting Market or Stop orders. Please place a Limit order.
 	MaintenanceWindow    WarningCode = 2002 // Due to nightly processing we are unable to accept orders between 11:30 PM and 12:00 AM EST.
+	NoStopLimitOrders    WarningCode = 2003 // This is a Pinksheet or over-the-counter (OTC) security.  Stop and Stop Limit orders are not available for this security.  Please use a Limit order.
+	WrongDirectionTrade  WarningCode = 2004 // You are placing a stop order on the wrong side of the market by either (1) purchasing at a price below the current Ask price or (2) selling at a price above the current Bid price.  Please adjust your Stop price based on the current quote.
 )
 
 type IProfile struct {

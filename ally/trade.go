@@ -31,7 +31,7 @@ func PostPreview(order *Order) (IPostPreview, error) {
 func handleWarning(order *Order, preview *IPostPreview) (IPostOrder, error) {
 	if preview.WarningText != "" {
 		switch preview.WarningText {
-		case "DuplicateOrder":
+		case "Please check your Order Status and Holdings pages.  You may have an existing open order or you may be entering a quantity greater than the position you hold in your account.  Please review and replace this order with the revised quantity as needed.":
 			order.Transmit = false
 			return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", DuplicateOrder)
 
@@ -107,6 +107,19 @@ func handleWarning(order *Order, preview *IPostPreview) (IPostOrder, error) {
 
 		case "Due to nightly processing we are unable to accept orders between 11:30 PM and 12:00 AM EST. Please replace your order after 12:00 AM .":
 			return IPostOrder{}, fmt.Errorf("tried to place order during maintenance window")
+
+		case "This is a Pinksheet or over-the-counter (OTC) security.  Stop and Stop Limit orders are not available for this security.  Please use a Limit order.":
+			if !OverrideMap[NoStopLimitOrders] || order.OrderType == "STP" {
+				order.Transmit = false
+				return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", NoStopLimitOrders)
+			}
+			order.OrderType = "LMT"
+
+		case "You are placing a stop order on the wrong side of the market by either (1) purchasing at a price below the current Ask price or (2) selling at a price above the current Bid price.  Please adjust your Stop price based on the current quote.", "For stop-limit order, limit price should be equal or above stop price for buys, and equal or below stop price for sells.", "The limit price you have entered is too aggressive either buying at a limit above the Ask, or selling at a limit below the Bid.  Please adjust your price.":
+			if !OverrideMap[WrongDirectionTrade] {
+				order.Transmit = false
+				return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", WrongDirectionTrade)
+			}
 
 		default:
 			return IPostOrder{}, fmt.Errorf("error text %s; no override implemented", preview.WarningText)
@@ -309,4 +322,6 @@ var OverrideMap = map[WarningCode]bool{
 	NoMarketOrder1:       false,
 	NoMarketOrder2:       false,
 	MaintenanceWindow:    false,
+	NoStopLimitOrders:    false,
+	WrongDirectionTrade:  false,
 }
