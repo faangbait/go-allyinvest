@@ -210,7 +210,7 @@ func RefreshPrices(securities map[string]Security) {
 
 	for idxRange := range gopart.Partition(len(keys), 85) {
 		symbols := keys[idxRange.Low:idxRange.High]
-		quotes := GetQuotes(symbols, []string{"bid", "ask", "symbol", "last"})
+		quotes := GetQuotes(symbols, []string{"bid", "ask", "symbol", "last", "vl"})
 		for _, quote := range quotes.Quotes.Quote {
 			s := securities[quote.Symbol]
 			s.Quote = quote
