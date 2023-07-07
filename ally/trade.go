@@ -205,8 +205,11 @@ func ValidateOrder(o *Order) error {
 		return fmt.Errorf("order marked no-transmit")
 	}
 
-	data, _ := xml.Marshal(Render(o))
-	return fmt.Errorf("not a valid order: %s", string(data))
+	data, err := xml.Marshal(Render(o))
+	if err != nil {
+		return fmt.Errorf("not a valid order: %s", string(data))
+	}
+	return nil
 }
 
 // // POST accounts/:id/orders
