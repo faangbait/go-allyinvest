@@ -1,0 +1,67 @@
+<html>
+ <head>
+  <style type="text/css">
+   .callout { background-color: #6ae6ef; }
+   .highlight { background-color: #dee2e6; padding:2ch; }
+  </style>
+  <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" rel="stylesheet"/>
+ </head>
+ <body class="bg-light">
+  <div class="container">
+   <div class="col-sm-9">
+    <h2>
+     Authentication
+    </h2>
+    <h3>
+     Overview
+    </h3>
+    <p>
+     Given the sensitive nature of investing online there are inherent risks in exposing brokerage services to the public. These risks can be mitigated by using a strong authentication strategy.
+    </p>
+    <p>
+     While some of the authentication methods we use may be more difficult to implement, it is with our customers’ security and privacy in mind that we enforce strict standards on account access. With that in mind, we require that each request to a critical brokerage function be encrypted, signed and verified (See
+     <a class="internal present" href="security.html">
+      Security
+     </a>
+     ).
+    </p>
+    <h3>
+     Authenticated Calls
+    </h3>
+    <p>
+     Every call made to the API must be signed using credentials from both the application and the user (See the
+     <a class="internal present" href="security.html">
+      Security
+     </a>
+     section for more information). If you have improperly implemented the request headers, the API will respond with an authentication error.
+    </p>
+    <h3>
+     Error Handling
+    </h3>
+    <p>
+     The API will respond accordingly when a call lacks the proper authentication for it to be successful. In the event that a user has revoked access to your application, or if you attempt to perform an action against an account that does not belong to the user you are authenticated as, the API will respond with an authentication error. 
+OAuth
+    </p>
+    <p>
+     We support the OAuth protocol for authentication. You must use OAuth to authenticate with the API.
+    </p>
+    <h3>
+     Creating an Application
+    </h3>
+    <p>
+     To create an application, you can visit
+     <a href="/api/invest/documentation">
+      https://www.ally.com/api/invest/documentation
+     </a>
+     . Once there you can sign-in and register your account for access to the API. Once properly registered and agreements have been signed, you can create applications associated with your account. This will give you everything you need to begin making requests on behalf of your own account.
+    </p>
+    <h3>
+     Authenticating a User
+    </h3>
+    <p>
+     In order to access a user's information and make calls on a user's behalf (or your own), your application will need to obtain that user's credentials. We support the OAuth Core 1.0 Revision A standard and you can find more information about our implementation in the OAuth section.
+    </p>
+   </div>
+  </div>
+ </body>
+</html>

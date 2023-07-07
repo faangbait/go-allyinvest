@@ -1,0 +1,149 @@
+<html>
+ <head>
+  <style type="text/css">
+   .callout { background-color: #6ae6ef; }
+   .highlight { background-color: #dee2e6; padding:2ch; }
+  </style>
+  <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" rel="stylesheet"/>
+ </head>
+ <body class="bg-light">
+  <div class="container">
+   <div class="col-sm-9">
+    <h2>
+     GET member/profile{.format}
+    </h2>
+    <h3>
+     Description
+    </h3>
+    <p>
+     This call will return general information associated with the user. More importantly it will also return all of the account numbers and account information for the user.
+    </p>
+    <table class="table table-bordered table-condensed table-striped">
+     <tr>
+      <th colspan="2">
+       Authentication Required
+      </th>
+     </tr>
+     <tr>
+      <td>
+       Yes
+      </td>
+      <td>
+       OAuth 1.0a
+      </td>
+     </tr>
+     <tr>
+      <th colspan="2">
+       URI Parameters
+      </th>
+     </tr>
+     <tr>
+      <td>
+       format
+      </td>
+      <td>
+       a response format, default is xml (See
+       <a class="internal present" href="response-structure.html">
+        Response Structure
+       </a>
+       )
+      </td>
+     </tr>
+     <tr>
+      <th colspan="2">
+       Example URL
+      </th>
+     </tr>
+     <tr>
+      <td colspan="2">
+       https://devapi.invest.ally.com/v1/member/profile.xml
+      </td>
+     </tr>
+    </table>
+    <h3>
+     Request Example
+    </h3>
+    <div class="highlight">
+     <pre>GET /v1/member/profile.xml HTTP/1.1
+Authorization: OAuth
+  oauth_consumer_key="672e71387c0a126f4e13296ecfb2b7bc",
+  oauth_nonce="cfdb7f42de425d94fbc24c11a920c33e",
+  oauth_signature="Vfm148kAgBZ6azEHqds43aY2UsEg3D",
+  oauth_signature_method="HMAC-SHA1",
+  oauth_timestamp="1306871932",
+  oauth_token="819682555b63ab8bd90a4138138e7365",
+  oauth_version="1.0"
+Connection: close
+Host: devapi.invest.ally.com
+</pre>
+    </div>
+    <h3>
+     Response Example
+    </h3>
+    <div class="highlight">
+     <pre><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;response</span> <span class="na">id=</span><span class="s">"77cf30da:12df25c7074:-7dd0"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;userdata&gt;</span>
+    <span class="nt">&lt;account&gt;</span>
+      <span class="nt">&lt;account&gt;</span>12345678<span class="nt">&lt;/account&gt;</span>
+      <span class="nt">&lt;fundtrading&gt;</span>true<span class="nt">&lt;/fundtrading&gt;</span>
+      <span class="nt">&lt;ira&gt;</span>false<span class="nt">&lt;/ira&gt;</span>
+      <span class="nt">&lt;margintrading&gt;</span>false<span class="nt">&lt;/margintrading&gt;</span>
+      <span class="nt">&lt;nickname&gt;</span>1<span class="nt">&lt;/nickname&gt;</span>
+      <span class="nt">&lt;optionlevel&gt;</span>3<span class="nt">&lt;/optionlevel&gt;</span>
+      <span class="nt">&lt;shared&gt;</span>false<span class="nt">&lt;/shared&gt;</span>
+      <span class="nt">&lt;stocktrading&gt;</span>true<span class="nt">&lt;/stocktrading&gt;</span>
+    <span class="nt">&lt;/account&gt;</span>
+    <span class="nt">&lt;disabled&gt;</span>false<span class="nt">&lt;/disabled&gt;</span>
+    <span class="nt">&lt;resetpassword&gt;</span>false<span class="nt">&lt;/resetpassword&gt;</span>
+    <span class="nt">&lt;resettradingpassword&gt;</span>false<span class="nt">&lt;/resettradingpassword&gt;</span>
+    <span class="nt">&lt;userprofile&gt;</span>
+      <span class="nt">&lt;entry&gt;</span>
+        <span class="nt">&lt;name&gt;</span>primaryMiddleInitial<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;value/&gt;</span>
+      <span class="nt">&lt;/entry&gt;</span>
+      <span class="nt">&lt;entry&gt;</span>
+        <span class="nt">&lt;name&gt;</span>primaryLastName<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;value&gt;</span>test<span class="nt">&lt;/value&gt;</span>
+      <span class="nt">&lt;/entry&gt;</span>
+      <span class="nt">&lt;entry&gt;</span>
+        <span class="nt">&lt;name&gt;</span>login_id<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;value&gt;</span>test<span class="nt">&lt;/value&gt;</span>
+      <span class="nt">&lt;/entry&gt;</span>
+      <span class="nt">&lt;entry&gt;</span>
+        <span class="nt">&lt;name&gt;</span>zip<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;value&gt;</span>12345<span class="nt">&lt;/value&gt;</span>
+      <span class="nt">&lt;/entry&gt;</span>
+      <span class="nt">&lt;entry&gt;</span>
+        <span class="nt">&lt;name&gt;</span>primaryFirstName<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;value&gt;</span>test<span class="nt">&lt;/value&gt;</span>
+      <span class="nt">&lt;/entry&gt;</span>
+      <span class="nt">&lt;entry&gt;</span>
+        <span class="nt">&lt;name&gt;</span>rtq<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;value&gt;</span>Y<span class="nt">&lt;/value&gt;</span>
+      <span class="nt">&lt;/entry&gt;</span>
+      <span class="nt">&lt;entry&gt;</span>
+        <span class="nt">&lt;name&gt;</span>emailAddress1<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;value&gt;</span><a class="__cf_email__" data-cfemail="87e9f2ebebc7e9e8e9e2a9e4e8ea" href="/cdn-cgi/l/email-protection">[email protected]</a><script data-cfhash="f9e31" type="text/javascript">/* <![CDATA[ */!function(t,e,r,n,c,a,p){try{t=document.currentScript||function(){for(t=document.getElementsByTagName('script'),e=t.length;e--;)if(t[e].getAttribute('data-cfhash'))return t[e]}();if(t&&(c=t.previousSibling)){p=t.parentNode;if(a=c.getAttribute('data-cfemail')){for(e='',r='0x'+a.substr(0,2)|0,n=2;a.length-n;n+=2)e+='%'+('0'+('0x'+a.substr(n,2)^r).toString(16)).slice(-2);p.replaceChild(document.createTextNode(decodeURIComponent(e)),c)}p.removeChild(t)}}catch(u){}}()/* ]]> */</script><span class="nt">&lt;/value&gt;</span>
+      <span class="nt">&lt;/entry&gt;</span>
+      <span class="nt">&lt;entry&gt;</span>
+        <span class="nt">&lt;name&gt;</span>expireMins<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;value&gt;</span>180<span class="nt">&lt;/value&gt;</span>
+      <span class="nt">&lt;/entry&gt;</span>
+      <span class="nt">&lt;entry&gt;</span>
+        <span class="nt">&lt;name&gt;</span>defaultAccount<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;value&gt;</span>12345678<span class="nt">&lt;/value&gt;</span>
+      <span class="nt">&lt;/entry&gt;</span>
+      <span class="nt">&lt;entry&gt;</span>
+        <span class="nt">&lt;name&gt;</span>useTradingPassword<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;value&gt;</span>Y<span class="nt">&lt;/value&gt;</span>
+      <span class="nt">&lt;/entry&gt;</span>
+    <span class="nt">&lt;/userprofile&gt;</span>
+  <span class="nt">&lt;/userdata&gt;</span>
+<span class="nt">&lt;/response&gt;</span>
+</pre>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,62 @@
+<html>
+ <head>
+  <style type="text/css">
+   .callout { background-color: #6ae6ef; }
+   .highlight { background-color: #dee2e6; padding:2ch; }
+  </style>
+  <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" rel="stylesheet"/>
+ </head>
+ <body class="bg-light">
+  <div class="container">
+   <div class="col-sm-9">
+    <h2>
+     R
+    </h2>
+    <p>
+     In this R example make sure to get/install the latest ROAuth library version manually (instead of from CRAN).
+    </p>
+    <div class="highlight">
+     <pre># Install 0.9.2 of ROAuth
+install.packages("link_to_file", repos = NULL, type="source")
+# Call the required packages
+library(ROAuth)
+library(RJSONIO)
+# Set your application keys
+cKey &lt;- '################'
+cSecret &lt;- '#################'
+oKey &lt;- '################'
+oSecret &lt;- '################'
+# Set the API endpoint
+tkURL &lt;- "https://devapi.invest.ally.com/v1/market/ext/quotes.json"
+# Create the OAuth connection - this is straight from the ROAuth documentation on CRAN
+credentials &lt;- OAuthFactory$new(consumerKey=cKey,
+                                consumerSecret=cSecret,
+                                oauthKey = oKey, 
+                                oauthSecret = oSecret,
+                                needsVerifier=FALSE,
+                                signMethod='HMAC')
+# Update the connection so the handshake is TRUE
+credentials$handshakeComplete &lt;- TRUE
+# Create the parameters to be passed with the GET request
+query &lt;- list()
+query[[ "symbols" ]] &lt;- "aapl, ibm, goog"
+query[[ "fids" ]] &lt;- "last,bid,ask"
+# Make the GET request, passing along the parameters, storing the response, then parsing the response
+response &lt;- credentials$OAuthRequest(tkURL, query)
+fromJSON(response)
+# Here is what the response will look like
+$response$quotes$quote[[1]]
+       ask        bid       exch       last     symbol 
+"209.8500" "209.8100"     "NYSE" "209.8100"      "IBM" 
+$response$quotes$quote[[2]]
+       ask        bid       exch       last     symbol 
+"755.8900" "755.6400"     "NASD" "755.8400"     "GOOG" 
+$response$quotes$quote[[3]]
+       ask        bid       exch       last     symbol 
+"639.7100" "639.5900"     "NASD" "639.5900"     "AAPL" 
+</pre>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

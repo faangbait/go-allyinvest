@@ -1,0 +1,82 @@
+<html>
+ <head>
+  <style type="text/css">
+   .callout { background-color: #6ae6ef; }
+   .highlight { background-color: #dee2e6; padding:2ch; }
+  </style>
+  <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" rel="stylesheet"/>
+ </head>
+ <body class="bg-light">
+  <div class="container">
+   <div class="col-sm-9">
+    <h2>
+     Rate Limiting
+    </h2>
+    <h3>
+     Overview
+    </h3>
+    <p>
+     We have implemented a rate limiting system for all authenticated brokerage calls through the API. It is designed to protect accounts from abuse and servers from load. We aim to put limits in place that provide protection but do not hinder the usability of the API.
+    </p>
+    <h3>
+     Limits
+    </h3>
+    <p>
+     These are the current limits in place:
+    </p>
+    <ul>
+     <li>
+      40 requests per minute for trade submission calls (ex: POST /v1/account/12345678/orders.xml)
+     </li>
+     <li>
+      60 requests per minute for market/quotes calls
+     </li>
+     <li>
+      180 requests per minute for all other authenticated calls (balances, summary, etc)
+     </li>
+    </ul>
+    <h3>
+     Rate Limit Headers
+    </h3>
+    <p>
+     You can find rate limit information in the response headers of all calls that are limited. These headers can help you throttle your application as well as provide information about your current limit quota.
+    </p>
+    <ul>
+     <li>
+      X-RateLimit-Used: Number of requests sent against the current limit
+     </li>
+     <li>
+      X-RateLimit-Expire: When the current limit will expire (Unix timestamp)
+     </li>
+     <li>
+      X-RateLimit-Limit: Total number of requests allowed in the call limit
+     </li>
+     <li>
+      X-RateLimit-Remaining: Number of requests allowed against the current limit
+     </li>
+    </ul>
+    <p>
+     Here is an example of the response headers for a trade/quote call:
+    </p>
+    <div class="highlight">
+     <pre>HTTP/1.1 200 OK
+Content-Length: 6024
+Content-Type: application/xml; charset=UTF-8
+Date: Wed, 16 Mar 2011 14:51:44 GMT
+Server: Apache-Coyote/1.1
+X-RateLimit-Used: 8
+X-RateLimit-Expire: 1300286940
+X-RateLimit-Limit: 60
+X-RateLimit-Remaining: 52
+</pre>
+    </div>
+    <h3>
+     Exceeding Limits
+    </h3>
+    <p>
+     If you exceed these limits you will receive a rate limit fault along with the same rate limiting headers you would receive in the response. You will receive this as a response until the limit has expired, at which point you will receive regular responses.
+    </p>
+   </div>
+  </div>
+ </body>
+</html>

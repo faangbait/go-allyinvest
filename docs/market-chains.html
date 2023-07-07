@@ -1,0 +1,321 @@
+<html>
+ <head>
+  <style type="text/css">
+   .callout { background-color: #6ae6ef; }
+   .highlight { background-color: #dee2e6; padding:2ch; }
+  </style>
+  <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" rel="stylesheet"/>
+ </head>
+ <body class="bg-light">
+  <div class="container">
+   <div class="col-sm-9">
+    <h2>
+     market/chains{.format}
+    </h2>
+    <h3>
+     This call is deprecated -- please use
+     <a href="market-options-search-get-post.html">
+      market/options/search
+     </a>
+    </h3>
+    <hr/>
+    <h3>
+     HTTP Request: GET
+    </h3>
+    <h3>
+     Description
+    </h3>
+    <p>
+     This call will allow you to obtain option chains for a particular underlying symbol. You can filter the chains using the type, expiration date, and strike range.
+    </p>
+    <ul>
+     <li>
+      <strong>
+       Authentication Required:
+      </strong>
+      Yes
+     </li>
+     <li>
+      <strong>
+       URI Parameters:
+      </strong>
+      <ul>
+       <li>
+        format - a response format, default is xml (See
+        <a class="internal present" href="response-structure.html">
+         Response Structure
+        </a>
+        )
+       </li>
+      </ul>
+     </li>
+     <li>
+      <strong>
+       Header Parameters:
+      </strong>
+      None
+     </li>
+     <li>
+      <strong>
+       Query Parameters:
+      </strong>
+      <ul>
+       <li>
+        underlying - a symbol
+       </li>
+       <li>
+        type - the top of option, Values:
+        <ul>
+         <li>
+          CALL_AND_PUT
+         </li>
+         <li>
+          COVERED_CALL
+         </li>
+         <li>
+          CALL
+         </li>
+         <li>
+          PUT
+         </li>
+        </ul>
+       </li>
+       <li>
+        expiration - expiration time range, Values:
+        <ul>
+         <li>
+          JAN
+         </li>
+         <li>
+          FEB
+         </li>
+         <li>
+          MAR
+         </li>
+         <li>
+          APR
+         </li>
+         <li>
+          MAY
+         </li>
+         <li>
+          JUN
+         </li>
+         <li>
+          JUL
+         </li>
+         <li>
+          AUG
+         </li>
+         <li>
+          SEP
+         </li>
+         <li>
+          OCT
+         </li>
+         <li>
+          NOV
+         </li>
+         <li>
+          DEC
+         </li>
+         <li>
+          ALL
+         </li>
+         <li>
+          LEAPS
+         </li>
+         <li>
+          ALL_LEAPS
+         </li>
+         <li>
+          WEEKLYS
+         </li>
+        </ul>
+       </li>
+       <li>
+        range - strike range, Values:
+        <ul>
+         <li>
+          OUT_THE_MONEY
+         </li>
+         <li>
+          IN_THE_MONEY
+         </li>
+         <li>
+          NEAR_THE_MONEY
+         </li>
+         <li>
+          AT_THE_MONEY
+         </li>
+         <li>
+          MORE
+         </li>
+         <li>
+          ALL_THE_MONEY
+         </li>
+        </ul>
+       </li>
+      </ul>
+     </li>
+     <li>
+      <strong>
+       Form Parameters:
+      </strong>
+      None
+     </li>
+    </ul>
+    <hr/>
+    <h3>
+     Request Example
+    </h3>
+    <div class="highlight">
+     <pre>GET /v1/market/chains.xml?underlying=AAPL<span class="err">&amp;</span>type=PUT<span class="err">&amp;</span>expiration=ALL<span class="err">&amp;</span>range=ALL_THE_MONEY HTTP/1.1
+Authorization: OAuth
+  oauth_consumer_key="672e71387c0a126f4e13296ecfb2b7bc",
+  oauth_nonce="cfdb7f42de425d94fbc24c11a920c33e",
+  oauth_signature="Vfm148kAgBZ6azEHqds43aY2UsEg3D",
+  oauth_signature_method="HMAC-SHA1",
+  oauth_timestamp="1306871932",
+  oauth_token="819682555b63ab8bd90a4138138e7365",
+  oauth_version="1.0"
+Connection: close
+Host: devapi.invest.ally.com
+</pre>
+    </div>
+    <h3>
+     Response Example
+    </h3>
+    <div class="highlight">
+     <pre><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;response</span> <span class="na">id=</span><span class="s">"3d6644c0:130af713b78:-24a0"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;putcalls&gt;</span>
+    <span class="nt">&lt;instrumentquote&gt;</span>
+      <span class="nt">&lt;displaydata&gt;</span>
+        <span class="nt">&lt;askprice&gt;</span>0.31<span class="nt">&lt;/askprice&gt;</span>
+        <span class="nt">&lt;asksize/&gt;</span>
+        <span class="nt">&lt;bidprice&gt;</span>0.21<span class="nt">&lt;/bidprice&gt;</span>
+        <span class="nt">&lt;bidsize/&gt;</span>
+        <span class="nt">&lt;change&gt;</span>-0.16<span class="nt">&lt;/change&gt;</span>
+        <span class="nt">&lt;contracthigh/&gt;</span>
+        <span class="nt">&lt;contractlow/&gt;</span>
+        <span class="nt">&lt;contractsize&gt;</span>100<span class="nt">&lt;/contractsize&gt;</span>
+        <span class="nt">&lt;delta/&gt;</span>
+        <span class="nt">&lt;earningspershare/&gt;</span>
+        <span class="nt">&lt;expiry&gt;</span>Jun 24 2011<span class="nt">&lt;/expiry&gt;</span>
+        <span class="nt">&lt;gamma/&gt;</span>
+        <span class="nt">&lt;high52price/&gt;</span>
+        <span class="nt">&lt;highprice/&gt;</span>
+        <span class="nt">&lt;impvolatility&gt;</span>54.43<span class="nt">&lt;/impvolatility&gt;</span>
+        <span class="nt">&lt;lastclosingprice/&gt;</span>
+        <span class="nt">&lt;lastprice&gt;</span>0.26<span class="nt">&lt;/lastprice&gt;</span>
+        <span class="nt">&lt;low52price/&gt;</span>
+        <span class="nt">&lt;lowprice/&gt;</span>
+        <span class="nt">&lt;nav/&gt;</span>
+        <span class="nt">&lt;openinterest&gt;</span>1,523.00<span class="nt">&lt;/openinterest&gt;</span>
+        <span class="nt">&lt;openprice/&gt;</span>
+        <span class="nt">&lt;optval/&gt;</span>
+        <span class="nt">&lt;optiontype&gt;</span>Put<span class="nt">&lt;/optiontype&gt;</span>
+        <span class="nt">&lt;pctchange/&gt;</span>
+        <span class="nt">&lt;priceearningsratio/&gt;</span>
+        <span class="nt">&lt;rho/&gt;</span>
+        <span class="nt">&lt;sessionvolume/&gt;</span>
+        <span class="nt">&lt;strike&gt;</span>285.00<span class="nt">&lt;/strike&gt;</span>
+        <span class="nt">&lt;symbol&gt;</span>AAPL<span class="nt">&lt;/symbol&gt;</span>
+        <span class="nt">&lt;theta/&gt;</span>
+        <span class="nt">&lt;unknownsymbol&gt;</span>null<span class="nt">&lt;/unknownsymbol&gt;</span>
+        <span class="nt">&lt;vega/&gt;</span>
+        <span class="nt">&lt;volatility/&gt;</span>
+        <span class="nt">&lt;volume&gt;</span>4,760<span class="nt">&lt;/volume&gt;</span>
+      <span class="nt">&lt;/displaydata&gt;</span>
+      <span class="nt">&lt;greeks&gt;</span>
+        <span class="nt">&lt;impvolatility&gt;</span>54.43<span class="nt">&lt;/impvolatility&gt;</span>
+      <span class="nt">&lt;/greeks&gt;</span>
+      <span class="nt">&lt;instrument&gt;</span>
+        <span class="nt">&lt;matdt&gt;</span>2011-06-24T00:00:00-04:00<span class="nt">&lt;/matdt&gt;</span>
+        <span class="nt">&lt;putcall&gt;</span>0<span class="nt">&lt;/putcall&gt;</span>
+        <span class="nt">&lt;strkpx&gt;</span>285.0<span class="nt">&lt;/strkpx&gt;</span>
+        <span class="nt">&lt;sym&gt;</span>AAPL<span class="nt">&lt;/sym&gt;</span>
+      <span class="nt">&lt;/instrument&gt;</span>
+      <span class="nt">&lt;quote&gt;</span>
+        <span class="nt">&lt;askprice&gt;</span>0.31<span class="nt">&lt;/askprice&gt;</span>
+        <span class="nt">&lt;bidprice&gt;</span>0.21<span class="nt">&lt;/bidprice&gt;</span>
+        <span class="nt">&lt;change&gt;</span>-0.16<span class="nt">&lt;/change&gt;</span>
+        <span class="nt">&lt;extendedquote&gt;</span>
+          <span class="nt">&lt;contractsize&gt;</span>100<span class="nt">&lt;/contractsize&gt;</span>
+          <span class="nt">&lt;delta&gt;</span>-3.0E-6<span class="nt">&lt;/delta&gt;</span>
+          <span class="nt">&lt;openinterest&gt;</span>1523<span class="nt">&lt;/openinterest&gt;</span>
+          <span class="nt">&lt;volume&gt;</span>4760<span class="nt">&lt;/volume&gt;</span>
+        <span class="nt">&lt;/extendedquote&gt;</span>
+        <span class="nt">&lt;lastprice&gt;</span>0.26<span class="nt">&lt;/lastprice&gt;</span>
+      <span class="nt">&lt;/quote&gt;</span>
+    <span class="nt">&lt;/instrumentquote&gt;</span>
+    <span class="nt">&lt;instrumentquote&gt;</span>
+      <span class="nt">&lt;displaydata&gt;</span>
+        <span class="nt">&lt;askprice&gt;</span>0.38<span class="nt">&lt;/askprice&gt;</span>
+        <span class="nt">&lt;asksize/&gt;</span>
+        <span class="nt">&lt;bidprice&gt;</span>0.34<span class="nt">&lt;/bidprice&gt;</span>
+        <span class="nt">&lt;bidsize/&gt;</span>
+        <span class="nt">&lt;change&gt;</span>-0.25<span class="nt">&lt;/change&gt;</span>
+        <span class="nt">&lt;contracthigh/&gt;</span>
+        <span class="nt">&lt;contractlow/&gt;</span>
+        <span class="nt">&lt;contractsize&gt;</span>100<span class="nt">&lt;/contractsize&gt;</span>
+        <span class="nt">&lt;delta/&gt;</span>
+        <span class="nt">&lt;earningspershare/&gt;</span>
+        <span class="nt">&lt;expiry&gt;</span>Jun 24 2011<span class="nt">&lt;/expiry&gt;</span>
+        <span class="nt">&lt;gamma/&gt;</span>
+        <span class="nt">&lt;high52price/&gt;</span>
+        <span class="nt">&lt;highprice/&gt;</span>
+        <span class="nt">&lt;impvolatility&gt;</span>49.76<span class="nt">&lt;/impvolatility&gt;</span>
+        <span class="nt">&lt;lastclosingprice/&gt;</span>
+        <span class="nt">&lt;lastprice&gt;</span>0.34<span class="nt">&lt;/lastprice&gt;</span>
+        <span class="nt">&lt;low52price/&gt;</span>
+        <span class="nt">&lt;lowprice/&gt;</span>
+        <span class="nt">&lt;nav/&gt;</span>
+        <span class="nt">&lt;openinterest&gt;</span>2,034.00<span class="nt">&lt;/openinterest&gt;</span>
+        <span class="nt">&lt;openprice/&gt;</span>
+        <span class="nt">&lt;optval/&gt;</span>
+        <span class="nt">&lt;optiontype&gt;</span>Put<span class="nt">&lt;/optiontype&gt;</span>
+        <span class="nt">&lt;pctchange/&gt;</span>
+        <span class="nt">&lt;priceearningsratio/&gt;</span>
+        <span class="nt">&lt;rho/&gt;</span>
+        <span class="nt">&lt;sessionvolume/&gt;</span>
+        <span class="nt">&lt;strike&gt;</span>290.00<span class="nt">&lt;/strike&gt;</span>
+        <span class="nt">&lt;symbol&gt;</span>AAPL<span class="nt">&lt;/symbol&gt;</span>
+        <span class="nt">&lt;theta/&gt;</span>
+        <span class="nt">&lt;unknownsymbol&gt;</span>null<span class="nt">&lt;/unknownsymbol&gt;</span>
+        <span class="nt">&lt;vega/&gt;</span>
+        <span class="nt">&lt;volatility/&gt;</span>
+        <span class="nt">&lt;volume&gt;</span>5,005<span class="nt">&lt;/volume&gt;</span>
+      <span class="nt">&lt;/displaydata&gt;</span>
+      <span class="nt">&lt;greeks&gt;</span>
+        <span class="nt">&lt;impvolatility&gt;</span>49.7583<span class="nt">&lt;/impvolatility&gt;</span>
+      <span class="nt">&lt;/greeks&gt;</span>
+      <span class="nt">&lt;instrument&gt;</span>
+        <span class="nt">&lt;matdt&gt;</span>2011-06-24T00:00:00-04:00<span class="nt">&lt;/matdt&gt;</span>
+        <span class="nt">&lt;putcall&gt;</span>0<span class="nt">&lt;/putcall&gt;</span>
+        <span class="nt">&lt;strkpx&gt;</span>290.0<span class="nt">&lt;/strkpx&gt;</span>
+        <span class="nt">&lt;sym&gt;</span>AAPL<span class="nt">&lt;/sym&gt;</span>
+      <span class="nt">&lt;/instrument&gt;</span>
+      <span class="nt">&lt;quote&gt;</span>
+        <span class="nt">&lt;askprice&gt;</span>0.38<span class="nt">&lt;/askprice&gt;</span>
+        <span class="nt">&lt;bidprice&gt;</span>0.34<span class="nt">&lt;/bidprice&gt;</span>
+        <span class="nt">&lt;change&gt;</span>-0.25<span class="nt">&lt;/change&gt;</span>
+        <span class="nt">&lt;extendedquote&gt;</span>
+          <span class="nt">&lt;contractsize&gt;</span>100<span class="nt">&lt;/contractsize&gt;</span>
+          <span class="nt">&lt;delta&gt;</span>-9.3E-5<span class="nt">&lt;/delta&gt;</span>
+          <span class="nt">&lt;openinterest&gt;</span>2034<span class="nt">&lt;/openinterest&gt;</span>
+          <span class="nt">&lt;volume&gt;</span>5005<span class="nt">&lt;/volume&gt;</span>
+        <span class="nt">&lt;/extendedquote&gt;</span>
+        <span class="nt">&lt;lastprice&gt;</span>0.34<span class="nt">&lt;/lastprice&gt;</span>
+      <span class="nt">&lt;/quote&gt;</span>
+    <span class="nt">&lt;/instrumentquote&gt;</span>
+    ...
+  <span class="nt">&lt;/putcalls&gt;</span>
+<span class="nt">&lt;/response&gt;</span>
+</pre>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,309 @@
+<html>
+ <head>
+  <style type="text/css">
+   .callout { background-color: #6ae6ef; }
+   .highlight { background-color: #dee2e6; padding:2ch; }
+  </style>
+  <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" rel="stylesheet"/>
+ </head>
+ <body class="bg-light">
+  <div class="container">
+   <div class="col-sm-9">
+    <h2>
+     market/quotes{.format}
+    </h2>
+    <h3>
+     This call is deprecated -- please use
+     <a href="market-ext-quotes-get-post.html">
+      market/ext/quotes
+     </a>
+    </h3>
+    <hr/>
+    <h3>
+     HTTP Request: GET
+    </h3>
+    <h3>
+     Description
+    </h3>
+    <p>
+     This call will allow you to obtain quotes for a particular symbol, list of symbols, or watchlist ID. You can request real-time or delayed quotes depending on the access level of your account.
+    </p>
+    <h3>
+     Common Stock Quote
+    </h3>
+    <ul>
+     <li>
+      <strong>
+       Authentication Required:
+      </strong>
+      Yes
+     </li>
+     <li>
+      <strong>
+       URI Parameters:
+      </strong>
+      <ul>
+       <li>
+        format - a response format, default is xml (See
+        <a class="internal present" href="response-structure.html">
+         Response Structure
+        </a>
+        )
+       </li>
+      </ul>
+     </li>
+     <li>
+      <strong>
+       Header Parameters:
+      </strong>
+      None
+     </li>
+     <li>
+      <strong>
+       Query Parameters (at least one):
+      </strong>
+      <ul>
+       <li>
+        symbols - a symbol, or comma-delimited list of symbols
+       </li>
+       <li>
+        watchlist - a watchlist id (this parameter takes precedence over any symbols listed)
+       </li>
+       <li>
+        delayed - true/false depending on whether to receive real-time quotes
+       </li>
+      </ul>
+     </li>
+     <li>
+      <strong>
+       Form Parameters:
+      </strong>
+      None
+     </li>
+    </ul>
+    <h3>
+     Option Quote
+    </h3>
+    <ul>
+     <li>
+      <strong>
+       Authentication Required:
+      </strong>
+      Yes
+     </li>
+     <li>
+      <strong>
+       URI Parameters:
+      </strong>
+      <ul>
+       <li>
+        format - a response format, default is xml (See
+        <a class="internal present" href="response-structure.html">
+         Response Structure
+        </a>
+        )
+       </li>
+      </ul>
+     </li>
+     <li>
+      <strong>
+       Header Parameters:
+      </strong>
+      None
+     </li>
+     <li>
+      <strong>
+       Query Parameters (all required):
+      </strong>
+      <ul>
+       <li>
+        underlying - underlying symbol for an option chain
+       </li>
+       <li>
+        expiration - expiration date in the format YYYY-MM-DD
+       </li>
+       <li>
+        type - type of option, Values:
+        <ul>
+         <li>
+          CALL
+         </li>
+         <li>
+          PUT
+         </li>
+        </ul>
+       </li>
+       <li>
+        strike - strike price of the chain
+       </li>
+      </ul>
+     </li>
+     <li>
+      <strong>
+       Form Parameters:
+      </strong>
+      None
+     </li>
+    </ul>
+    <hr/>
+    <h3>
+     Request Example (Stock)
+    </h3>
+    <div class="highlight">
+     <pre>GET /v1/market/quotes.xml?symbols=AAPL<span class="err">&amp;</span>delayed=false HTTP/1.1
+Authorization: OAuth
+  oauth_consumer_key="672e71387c0a126f4e13296ecfb2b7bc",
+  oauth_nonce="cfdb7f42de425d94fbc24c11a920c33e",
+  oauth_signature="Vfm148kAgBZ6azEHqds43aY2UsEg3D",
+  oauth_signature_method="HMAC-SHA1",
+  oauth_timestamp="1306871932",
+  oauth_token="819682555b63ab8bd90a4138138e7365",
+  oauth_version="1.0"
+Connection: close
+Host: devapi.invest.ally.com
+</pre>
+    </div>
+    <h3>
+     Request Example (Option)
+    </h3>
+    <div class="highlight">
+     <pre>GET /v1/market/quotes.xml?underlying=AAPL<span class="err">&amp;</span>expiration=2011-06-24<span class="err">&amp;</span>type=CALL<span class="err">&amp;</span>strike=285.0<span class="err">&amp;</span>delayed=true HTTP/1.1
+Authorization: OAuth
+  oauth_consumer_key="672e71387c0a126f4e13296ecfb2b7bc",
+  oauth_nonce="cfdb7f42de425d94fbc24c11a920c33e",
+  oauth_signature="Vfm148kAgBZ6azEHqds43aY2UsEg3D",
+  oauth_signature_method="HMAC-SHA1",
+  oauth_timestamp="1306871932",
+  oauth_token="819682555b63ab8bd90a4138138e7365",
+  oauth_version="1.0"
+Connection: close
+Host: devapi.invest.ally.com
+</pre>
+    </div>
+    <h3>
+     Response Example (Stock)
+    </h3>
+    <div class="highlight">
+     <pre><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;response</span> <span class="na">id=</span><span class="s">"77cf30da:12df25c7074:-7de4"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;quotes&gt;</span>
+    <span class="nt">&lt;instrumentquote&gt;</span>
+      <span class="nt">&lt;greeks/&gt;</span>
+      <span class="nt">&lt;instrument&gt;</span>
+        <span class="nt">&lt;desc&gt;</span>APPLE INC<span class="nt">&lt;/desc&gt;</span>
+        <span class="nt">&lt;exch&gt;</span>NSD<span class="nt">&lt;/exch&gt;</span>
+        <span class="nt">&lt;sectyp&gt;</span>CS<span class="nt">&lt;/sectyp&gt;</span>
+        <span class="nt">&lt;sym&gt;</span>AAPL<span class="nt">&lt;/sym&gt;</span>
+      <span class="nt">&lt;/instrument&gt;</span>
+      <span class="nt">&lt;quote&gt;</span>
+        <span class="nt">&lt;askprice&gt;</span>346.66<span class="nt">&lt;/askprice&gt;</span>
+        <span class="nt">&lt;bidprice&gt;</span>346.65<span class="nt">&lt;/bidprice&gt;</span>
+        <span class="nt">&lt;change&gt;</span>3.22<span class="nt">&lt;/change&gt;</span>
+        <span class="nt">&lt;extendedquote&gt;</span>
+          <span class="nt">&lt;asksize&gt;</span>1<span class="nt">&lt;/asksize&gt;</span>
+          <span class="nt">&lt;bidsize&gt;</span>1<span class="nt">&lt;/bidsize&gt;</span>
+          <span class="nt">&lt;dividenddata&gt;</span>
+            <span class="nt">&lt;amt&gt;</span>0.0<span class="nt">&lt;/amt&gt;</span>
+            <span class="nt">&lt;exdate&gt;</span>2005-05-11T00:00:00-04:00<span class="nt">&lt;/exdate&gt;</span>
+            <span class="nt">&lt;yield&gt;</span>4.9E-324<span class="nt">&lt;/yield&gt;</span>
+          <span class="nt">&lt;/dividenddata&gt;</span>
+          <span class="nt">&lt;earningspershare&gt;</span>17.91<span class="nt">&lt;/earningspershare&gt;</span>
+          <span class="nt">&lt;high52price&gt;</span>348.6<span class="nt">&lt;/high52price&gt;</span>
+          <span class="nt">&lt;highprice&gt;</span>346.69<span class="nt">&lt;/highprice&gt;</span>
+          <span class="nt">&lt;low52price&gt;</span>190.25<span class="nt">&lt;/low52price&gt;</span>
+          <span class="nt">&lt;lowprice&gt;</span>343.51<span class="nt">&lt;/lowprice&gt;</span>
+          <span class="nt">&lt;openprice&gt;</span>343.64<span class="nt">&lt;/openprice&gt;</span>
+          <span class="nt">&lt;prevclose&gt;</span>343.44<span class="nt">&lt;/prevclose&gt;</span>
+          <span class="nt">&lt;priceearningsratio&gt;</span>19.36<span class="nt">&lt;/priceearningsratio&gt;</span>
+          <span class="nt">&lt;sessionvolume&gt;</span>9190521<span class="nt">&lt;/sessionvolume&gt;</span>
+          <span class="nt">&lt;volume&gt;</span>9440588<span class="nt">&lt;/volume&gt;</span>
+        <span class="nt">&lt;/extendedquote&gt;</span>
+        <span class="nt">&lt;lastprice&gt;</span>346.66<span class="nt">&lt;/lastprice&gt;</span>
+        <span class="nt">&lt;pctchange&gt;</span>0.94<span class="nt">&lt;/pctchange&gt;</span>
+      <span class="nt">&lt;/quote&gt;</span>
+      <span class="nt">&lt;unknownsymbol&gt;</span>false<span class="nt">&lt;/unknownsymbol&gt;</span>
+    <span class="nt">&lt;/instrumentquote&gt;</span>
+  <span class="nt">&lt;/quotes&gt;</span>
+<span class="nt">&lt;/response&gt;</span>
+</pre>
+    </div>
+    <h3>
+     Response Example (Option)
+    </h3>
+    <div class="highlight">
+     <pre><span class="nt">&lt;response</span> <span class="na">id=</span><span class="s">"3d6644c0:130af713b78:-2c4"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;quotes&gt;</span>
+    <span class="nt">&lt;instrumentquote&gt;</span>
+      <span class="nt">&lt;greeks&gt;</span>
+        <span class="nt">&lt;delta&gt;</span>0.999996<span class="nt">&lt;/delta&gt;</span>
+      <span class="nt">&lt;/greeks&gt;</span>
+      <span class="nt">&lt;instrument&gt;</span>
+        <span class="nt">&lt;desc&gt;</span>AAPL Jun 24 2011 285.00 Call<span class="nt">&lt;/desc&gt;</span>
+        <span class="nt">&lt;exch&gt;</span>CMP<span class="nt">&lt;/exch&gt;</span>
+        <span class="nt">&lt;matdt&gt;</span>2011-06-24T00:00:00-04:00<span class="nt">&lt;/matdt&gt;</span>
+        <span class="nt">&lt;putcall&gt;</span>1<span class="nt">&lt;/putcall&gt;</span>
+        <span class="nt">&lt;sectyp&gt;</span>OPT<span class="nt">&lt;/sectyp&gt;</span>
+        <span class="nt">&lt;strkpx&gt;</span>285.0<span class="nt">&lt;/strkpx&gt;</span>
+        <span class="nt">&lt;sym&gt;</span>AAPL<span class="nt">&lt;/sym&gt;</span>
+      <span class="nt">&lt;/instrument&gt;</span>
+      <span class="nt">&lt;quote&gt;</span>
+        <span class="nt">&lt;askprice&gt;</span>30.7<span class="nt">&lt;/askprice&gt;</span>
+        <span class="nt">&lt;bidprice&gt;</span>30.3<span class="nt">&lt;/bidprice&gt;</span>
+        <span class="nt">&lt;change&gt;</span>-4.0<span class="nt">&lt;/change&gt;</span>
+        <span class="nt">&lt;extendedquote&gt;</span>
+          <span class="nt">&lt;asksize&gt;</span>21<span class="nt">&lt;/asksize&gt;</span>
+          <span class="nt">&lt;bidsize&gt;</span>21<span class="nt">&lt;/bidsize&gt;</span>
+          <span class="nt">&lt;contracthigh&gt;</span>38.9<span class="nt">&lt;/contracthigh&gt;</span>
+          <span class="nt">&lt;contractlow&gt;</span>31.75<span class="nt">&lt;/contractlow&gt;</span>
+          <span class="nt">&lt;contractsize&gt;</span>100<span class="nt">&lt;/contractsize&gt;</span>
+          <span class="nt">&lt;delta&gt;</span>0.999996<span class="nt">&lt;/delta&gt;</span>
+          <span class="nt">&lt;highprice&gt;</span>31.75<span class="nt">&lt;/highprice&gt;</span>
+          <span class="nt">&lt;lowprice&gt;</span>31.75<span class="nt">&lt;/lowprice&gt;</span>
+          <span class="nt">&lt;openprice&gt;</span>31.75<span class="nt">&lt;/openprice&gt;</span>
+          <span class="nt">&lt;prevclose&gt;</span>35.75<span class="nt">&lt;/prevclose&gt;</span>
+          <span class="nt">&lt;volume&gt;</span>5<span class="nt">&lt;/volume&gt;</span>
+        <span class="nt">&lt;/extendedquote&gt;</span>
+        <span class="nt">&lt;lastprice&gt;</span>31.75<span class="nt">&lt;/lastprice&gt;</span>
+        <span class="nt">&lt;pctchange&gt;</span>-11.19<span class="nt">&lt;/pctchange&gt;</span>
+      <span class="nt">&lt;/quote&gt;</span>
+      <span class="nt">&lt;underlying&gt;</span>
+        <span class="nt">&lt;desc&gt;</span>APPLE INC<span class="nt">&lt;/desc&gt;</span>
+        <span class="nt">&lt;exch&gt;</span>NSD<span class="nt">&lt;/exch&gt;</span>
+        <span class="nt">&lt;sym&gt;</span>AAPL<span class="nt">&lt;/sym&gt;</span>
+      <span class="nt">&lt;/underlying&gt;</span>
+      <span class="nt">&lt;undlyquote&gt;</span>
+        <span class="nt">&lt;askprice&gt;</span>319.0<span class="nt">&lt;/askprice&gt;</span>
+        <span class="nt">&lt;bidprice&gt;</span>315.5<span class="nt">&lt;/bidprice&gt;</span>
+        <span class="nt">&lt;change&gt;</span>-4.94<span class="nt">&lt;/change&gt;</span>
+        <span class="nt">&lt;extendedquote&gt;</span>
+          <span class="nt">&lt;asksize&gt;</span>0<span class="nt">&lt;/asksize&gt;</span>
+          <span class="nt">&lt;bidsize&gt;</span>0<span class="nt">&lt;/bidsize&gt;</span>
+          <span class="nt">&lt;dividenddata&gt;</span>
+            <span class="nt">&lt;amt&gt;</span>0.0<span class="nt">&lt;/amt&gt;</span>
+            <span class="nt">&lt;exdate&gt;</span>2005-05-11T00:00:00-04:00<span class="nt">&lt;/exdate&gt;</span>
+            <span class="nt">&lt;yield&gt;</span>4.9E-324<span class="nt">&lt;/yield&gt;</span>
+          <span class="nt">&lt;/dividenddata&gt;</span>
+          <span class="nt">&lt;earningspershare&gt;</span>20.98<span class="nt">&lt;/earningspershare&gt;</span>
+          <span class="nt">&lt;high52price&gt;</span>364.9<span class="nt">&lt;/high52price&gt;</span>
+          <span class="nt">&lt;highprice&gt;</span>317.7<span class="nt">&lt;/highprice&gt;</span>
+          <span class="nt">&lt;low52price&gt;</span>235.56<span class="nt">&lt;/low52price&gt;</span>
+          <span class="nt">&lt;lowprice&gt;</span>310.5<span class="nt">&lt;/lowprice&gt;</span>
+          <span class="nt">&lt;openprice&gt;</span>317.355<span class="nt">&lt;/openprice&gt;</span>
+          <span class="nt">&lt;prevclose&gt;</span>320.26<span class="nt">&lt;/prevclose&gt;</span>
+          <span class="nt">&lt;priceearningsratio&gt;</span>15.03<span class="nt">&lt;/priceearningsratio&gt;</span>
+          <span class="nt">&lt;sessionvolume&gt;</span>22544928<span class="nt">&lt;/sessionvolume&gt;</span>
+          <span class="nt">&lt;volume&gt;</span>22880182<span class="nt">&lt;/volume&gt;</span>
+        <span class="nt">&lt;/extendedquote&gt;</span>
+        <span class="nt">&lt;lastprice&gt;</span>315.32<span class="nt">&lt;/lastprice&gt;</span>
+        <span class="nt">&lt;pctchange&gt;</span>-1.54<span class="nt">&lt;/pctchange&gt;</span>
+      <span class="nt">&lt;/undlyquote&gt;</span>
+      <span class="nt">&lt;unknownsymbol&gt;</span>false<span class="nt">&lt;/unknownsymbol&gt;</span>
+    <span class="nt">&lt;/instrumentquote&gt;</span>
+  <span class="nt">&lt;/quotes&gt;</span>
+<span class="nt">&lt;/response&gt;</span>
+</pre>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

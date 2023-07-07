@@ -1,0 +1,276 @@
+<html>
+ <head>
+  <style type="text/css">
+   .callout { background-color: #6ae6ef; }
+   .highlight { background-color: #dee2e6; padding:2ch; }
+  </style>
+  <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" rel="stylesheet"/>
+ </head>
+ <body class="bg-light">
+  <div class="container">
+   <div class="col-sm-9">
+    <h2>
+     GET market/timesales{.format}
+    </h2>
+    <h3>
+     Description
+    </h3>
+    <p>
+     This call will return time and sales quote data based on a symbol passed as a query parameter (see query parameters below).
+    </p>
+    <table class="table table-bordered table-condensed table-striped">
+     <tr>
+      <th colspan="2">
+       Authentication Required
+      </th>
+     </tr>
+     <tr>
+      <td>
+       Yes
+      </td>
+      <td>
+       OAuth 1.0a
+      </td>
+     </tr>
+     <tr>
+      <th colspan="2">
+       Query Parameters
+      </th>
+     </tr>
+     <tr>
+      <td>
+       symbols
+      </td>
+      <td>
+       a single symbol to search on (symbol parameter is required)
+      </td>
+     </tr>
+     <tr>
+      <td>
+       interval
+      </td>
+      <td>
+       the requested interval of data to be returned: 5min, 1min, tick (5min is the default)
+      </td>
+     </tr>
+     <tr>
+      <td>
+       rpp
+      </td>
+      <td>
+       the number of requests per page (only valid for the tick interval, 10 is the default)
+      </td>
+     </tr>
+     <tr>
+      <td>
+       index
+      </td>
+      <td>
+       the record offset when requesting paginated data (only valid for the tick interval)
+      </td>
+     </tr>
+     <tr>
+      <td>
+       startdate
+      </td>
+      <td>
+       begin date for the range of data between this date and enddate (startdate parameter is required)
+      </td>
+     </tr>
+     <tr>
+      <td>
+       enddate
+      </td>
+      <td>
+       end date for the range of data requested between start date and this date (enddate parameter is required)
+      </td>
+     </tr>
+     <tr>
+      <td>
+       starttime
+      </td>
+      <td>
+       start time for intraday data requests
+      </td>
+     </tr>
+     <tr>
+      <th colspan="2">
+       Example URL
+      </th>
+     </tr>
+     <tr>
+      <td colspan="2">
+       https://devapi.invest.ally.com/v1/market/timesales.xml
+      </td>
+     </tr>
+    </table>
+    <h3>
+     Data Fields
+    </h3>
+    <table class="table table-striped table-bordered table-condensed">
+     <tr>
+      <th>
+       Data Tag
+      </th>
+      <th>
+       Description
+      </th>
+     </tr>
+     <tr>
+      <td>
+       date
+      </td>
+      <td>
+       Date
+      </td>
+     </tr>
+     <tr>
+      <td>
+       datetime
+      </td>
+      <td>
+       Date and time
+      </td>
+     </tr>
+     <tr>
+      <td>
+       hi
+      </td>
+      <td>
+       High Trade Price
+      </td>
+     </tr>
+     <tr>
+      <td>
+       incr_vl
+      </td>
+      <td>
+       Volume of trades
+      </td>
+     </tr>
+     <tr>
+      <td>
+       last
+      </td>
+      <td>
+       Last trade price
+      </td>
+     </tr>
+     <tr>
+      <td>
+       lo
+      </td>
+      <td>
+       Low Trade Price
+      </td>
+     </tr>
+     <tr>
+      <td>
+       opn
+      </td>
+      <td>
+       Open trade price
+      </td>
+     </tr>
+     <tr>
+      <td>
+       timestamp
+      </td>
+      <td>
+       Timestamp
+      </td>
+     </tr>
+     <tr>
+      <td>
+       vl
+      </td>
+      <td>
+       Cumulative volume
+      </td>
+     </tr>
+    </table>
+    <h3>
+     Special Considerations
+    </h3>
+    <p>
+     <strong>
+      Multi-day data requests
+     </strong>
+     <br/>
+     Time and sales data is available on a rolling 5 day basis. To access multi-day time and sales your request should include a startdate parameter. An enddate parameter can optionally be used to request a date range. If an enddate parameter is not included with the request, the response will include data up to the current day and time.
+    </p>
+    <p>
+     <strong>
+      Intra-day data requests
+     </strong>
+     <br/>
+     By default, all requests are considered to be intra-day requests. All intra-day data is returned when 1min and 5min intervals are requested beginning at market open. To offset the data returned to a time other than market open, the starttime parameter can be used. Because the number of ticks could be very large (particularly for a symbol with a lot of volume), the data is paginated. Through the use of the interval and rpp parameters, intraday tick data can be accessed.
+    </p>
+    <p>
+     <strong>
+      Timestamps
+     </strong>
+     <br/>
+     The datetime field will indicate the start time of an interval (for example: 09:25 will represent the interval from 09:25 to 09:30).
+    </p>
+    <p>
+     <strong>
+      Partial data
+     </strong>
+     <br/>
+     When intra-day requests are made with 1min and 5min intervals while the market is open, the last record will contain partial data until the next interval begins.
+    </p>
+    <h3>
+     Request Example
+    </h3>
+    <div class="highlight">
+     <pre>GET /v1/market/timesales.xml?symbols=AAPL&amp;startdate=2012-04-06&amp;interval=1min HTTP/1.1
+Authorization: OAuth
+  oauth_consumer_key="672e71387c0a126f4e13296ecfb2b7bc",
+  oauth_nonce="cfdb7f42de425d94fbc24c11a920c33e",
+  oauth_signature="Vfm148kAgBZ6azEHqds43aY2UsEg3D",
+  oauth_signature_method="HMAC-SHA1",
+  oauth_timestamp="1306871932",
+  oauth_token="819682555b63ab8bd90a4138138e7365",
+  oauth_version="1.0"
+Connection: close
+Host: devapi.invest.ally.com
+</pre>
+    </div>
+    <h3>
+     Response Example
+    </h3>
+    <div class="highlight">
+     <pre><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;response</span> <span class="na">id=</span><span class="s">"7b80be33:136982a9fda:-5598"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;quotes&gt;</span>
+    <span class="nt">&lt;quote&gt;</span>
+      <span class="nt">&lt;date&gt;</span>2012-04-17<span class="nt">&lt;/date&gt;</span>
+      <span class="nt">&lt;datetime&gt;</span>2012-04-17T09:25:00-04:00<span class="nt">&lt;/datetime&gt;</span>
+      <span class="nt">&lt;hi&gt;</span>579.0000<span class="nt">&lt;/hi&gt;</span>
+      <span class="nt">&lt;incr_vl&gt;</span>8358<span class="nt">&lt;/incr_vl&gt;</span>
+      <span class="nt">&lt;last&gt;</span>578.8700<span class="nt">&lt;/last&gt;</span>
+      <span class="nt">&lt;lo&gt;</span>578.8500<span class="nt">&lt;/lo&gt;</span>
+      <span class="nt">&lt;opn&gt;</span>578.9400<span class="nt">&lt;/opn&gt;</span>
+      <span class="nt">&lt;timestamp&gt;</span>1334669100<span class="nt">&lt;/timestamp&gt;</span>
+      <span class="nt">&lt;vl&gt;</span>8358<span class="nt">&lt;/vl&gt;</span>
+    <span class="nt">&lt;/quote&gt;</span>
+    <span class="nt">&lt;quote&gt;</span>
+      <span class="nt">&lt;date&gt;</span>2012-04-17<span class="nt">&lt;/date&gt;</span>
+      <span class="nt">&lt;datetime&gt;</span>2012-04-17T09:30:00-04:00<span class="nt">&lt;/datetime&gt;</span>
+      <span class="nt">&lt;hi&gt;</span>582.1336<span class="nt">&lt;/hi&gt;</span>
+      <span class="nt">&lt;incr_vl&gt;</span>1979329<span class="nt">&lt;/incr_vl&gt;</span>
+      <span class="nt">&lt;last&gt;</span>575.7000<span class="nt">&lt;/last&gt;</span>
+      <span class="nt">&lt;lo&gt;</span>574.0000<span class="nt">&lt;/lo&gt;</span>
+      <span class="nt">&lt;opn&gt;</span>578.8600<span class="nt">&lt;/opn&gt;</span>
+      <span class="nt">&lt;timestamp&gt;</span>1334669400<span class="nt">&lt;/timestamp&gt;</span>
+      <span class="nt">&lt;vl&gt;</span>1979329<span class="nt">&lt;/vl&gt;</span>
+    <span class="nt">&lt;/quote&gt;</span>
+  <span class="nt">&lt;/quotes&gt;</span>
+<span class="nt">&lt;/response&gt;</span>
+</pre>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

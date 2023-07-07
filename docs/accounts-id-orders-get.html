@@ -1,0 +1,129 @@
+<html>
+ <head>
+  <style type="text/css">
+   .callout { background-color: #6ae6ef; }
+   .highlight { background-color: #dee2e6; padding:2ch; }
+  </style>
+  <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" rel="stylesheet"/>
+ </head>
+ <body class="bg-light">
+  <div class="container">
+   <div class="col-sm-9">
+    <h2>
+     GET accounts/:id/orders{.format}
+    </h2>
+    <h3>
+     Description
+    </h3>
+    <p>
+     This call will return the most recent orders for the account specified in the URI.
+    </p>
+    <table class="table table-bordered table-condensed table-striped">
+     <tr>
+      <th colspan="2">
+       Authentication Required
+      </th>
+     </tr>
+     <tr>
+      <td>
+       Yes
+      </td>
+      <td>
+       OAuth 1.0a
+      </td>
+     </tr>
+     <tr>
+      <th colspan="2">
+       URI Parameters
+      </th>
+     </tr>
+     <tr>
+      <td>
+       id
+      </td>
+      <td>
+       a valid account number
+      </td>
+     </tr>
+     <tr>
+      <td>
+       format
+      </td>
+      <td>
+       a response format, default is xml (See
+       <a class="internal present" href="response-structure.html">
+        Response Structure
+       </a>
+       )
+      </td>
+     </tr>
+     <tr>
+      <th colspan="2">
+       Example URL
+      </th>
+     </tr>
+     <tr>
+      <td colspan="2">
+       https://devapi.invest.ally.com/v1/accounts/12345678/orders.xml
+      </td>
+     </tr>
+    </table>
+    <h3>
+     Special Considerations
+    </h3>
+    <p>
+     The response for orders is in
+     <a class="internal present" href="fixml.html">
+      FIXML
+     </a>
+     format. Please visit the
+     <a class="internal present" href="fixml.html">
+      FIXML
+     </a>
+     page as well as the
+     <a class="internal present" href="trading.html">
+      Trading
+     </a>
+     page for more information.
+    </p>
+    <p>
+     Please note that account numbers listed in the response for the "Acct" field are given with an additional digit, normally a "2". For using this account field programically, it may be necessary to remove this last number.
+    </p>
+    <h3>
+     Request Example
+    </h3>
+    <div class="highlight">
+     <pre>GET /v1/accounts/123456878/orders.xml HTTP/1.1
+Authorization: OAuth
+  oauth_consumer_key="672e71387c0a126f4e13296ecfb2b7bc",
+  oauth_nonce="cfdb7f42de425d94fbc24c11a920c33e",
+  oauth_signature="Vfm148kAgBZ6azEHqds43aY2UsEg3D",
+  oauth_signature_method="HMAC-SHA1",
+  oauth_timestamp="1306871932",
+  oauth_token="819682555b63ab8bd90a4138138e7365",
+  oauth_version="1.0"
+Connection: close
+Host: devapi.invest.ally.com
+</pre>
+    </div>
+    <h3>
+     Response Example
+    </h3>
+    <div class="highlight">
+     <pre><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;response</span> <span class="na">id=</span><span class="s">"77cf30da:12df25c7074:-7e20"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;orderstatus&gt;</span>
+    <span class="nt">&lt;order&gt;</span>
+      <span class="nt">&lt;fixmlmessage&gt;</span><span class="cp">&lt;![CDATA[&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;FIXML xmlns="http://www.fixprotocol.org/FIXML-5-0-SP2"&gt;&lt;ExecRpt AvgPx="0" CumQty="0" LeavesQty="1" TmInForce="0" Px="10" Typ="2" Side="1" AcctTyp="2" Acct="12345678" Stat="1" ID="SVI-65454645" OrdID="SVI-456456"&gt;&lt;Instrmt Desc="FORD MOTOR COMPANY" SecTyp="CS" Sym="F"/&gt;&lt;OrdQty Qty="1"/&gt;&lt;FillsGrp FillQty="1" FillPx="0"/&gt;&lt;/ExecRpt&gt;&lt;/FIXML&gt;]]&gt;</span><span class="nt">&lt;/fixmlmessage&gt;</span>
+    <span class="nt">&lt;/order&gt;</span>
+    <span class="nt">&lt;order&gt;</span>
+      <span class="nt">&lt;fixmlmessage&gt;</span><span class="cp">&lt;![CDATA[&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;FIXML xmlns="http://www.fixprotocol.org/FIXML-5-0-SP2"&gt;&lt;ExecRpt Txt="Due to the additional cost of maintenance on Pink Sheet and OTC-BB securities, we require a minimum purchase of $100 for each trade." TxnTm="2011-02-04T10:48:00.000-05:00" TrdDt="2011-02-04T00:00:00.000-05:00" LeavesQty="0" LastPx="0" LastQty="0" TmInForce="0" Px="0.25" Typ="2" Side="1" AcctTyp="2" Acct="12345678" Stat="8" ID="SVR-4564564" OrdID="SVR-46055395"&gt;&lt;Instrmt Desc="GREENLAND MINERALS AND ENERG" SecTyp="CS" Sym="GDLNF"/&gt;&lt;OrdQty Qty="10"/&gt;&lt;/ExecRpt&gt;&lt;/FIXML&gt;]]&gt;</span><span class="nt">&lt;/fixmlmessage&gt;</span>
+    <span class="nt">&lt;/order&gt;</span>
+  <span class="nt">&lt;/orderstatus&gt;</span>
+<span class="nt">&lt;/response&gt;</span>
+</pre>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

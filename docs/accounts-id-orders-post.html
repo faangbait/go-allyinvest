@@ -1,0 +1,221 @@
+<html>
+ <head>
+  <style type="text/css">
+   .callout { background-color: #6ae6ef; }
+   .highlight { background-color: #dee2e6; padding:2ch; }
+  </style>
+  <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" rel="stylesheet"/>
+ </head>
+ <body class="bg-light">
+  <div class="container">
+   <div class="col-sm-9">
+    <h2>
+     POST accounts/:id/orders{.format}
+    </h2>
+    <h3>
+     Description
+    </h3>
+    <p>
+     This call will allow you to place an order. This requires the order data is submitted in
+     <a class="internal present" href="fixml.html">
+      FIXML
+     </a>
+     format submitted as XML within the body.
+    </p>
+    <table class="table table-bordered table-condensed table-striped">
+     <tr>
+      <th colspan="2">
+       Authentication Required
+      </th>
+     </tr>
+     <tr>
+      <td>
+       Yes
+      </td>
+      <td>
+       OAuth 1.0a
+      </td>
+     </tr>
+     <tr>
+      <th colspan="2">
+       URI Parameters
+      </th>
+     </tr>
+     <tr>
+      <td>
+       id
+      </td>
+      <td>
+       a valid account number
+      </td>
+     </tr>
+     <tr>
+      <td>
+       format
+      </td>
+      <td>
+       a response format, default is xml (See
+       <a class="internal present" href="response-structure.html">
+        Response Structure
+       </a>
+       )
+      </td>
+     </tr>
+     <tr>
+      <th colspan="2">
+       Header Parameters
+      </th>
+     </tr>
+     <tr>
+      <td>
+       TKI_TRADEPASS
+      </td>
+      <td>
+       The user's trading password (if necessary). This is not common. Normally used when many accounts are tied to the same user, but specific accounts require separate trading passwords.
+      </td>
+     </tr>
+     <tr>
+      <td>
+       TKI_OVERRIDE
+      </td>
+      <td>
+       Override any order warnings. If there are no order warnings, this is not required. In the event of an order warning, this must be used to successfully send orders and bypass the warning messages.
+      </td>
+     </tr>
+     <tr>
+      <th colspan="2">
+       Example URL
+      </th>
+     </tr>
+     <tr>
+      <td colspan="2">
+       https://devapi.invest.ally.com/v1/accounts/12345678/orders.xml
+      </td>
+     </tr>
+    </table>
+    <h3>
+     Special Considerations
+    </h3>
+    <p>
+     The request for order placement must be
+     <a class="internal present" href="fixml.html">
+      FIXML
+     </a>
+     format submitted within the message body. Please visit the
+     <a class="internal present" href="fixml.html">
+      FIXML
+     </a>
+     page as well as the
+     <a class="internal present" href="trading.html">
+      Trading
+     </a>
+     page for more information.
+    </p>
+    <h3>
+     Data Fields
+    </h3>
+    <p>
+     Please see the
+     <a class="internal present" href="fixml.html">
+      FIXML
+     </a>
+     documentation for more information.
+    </p>
+    <h3>
+     Request Example
+    </h3>
+    <div class="highlight">
+     <pre>POST /v1/accounts/123456878/orders.xml HTTP/1.1
+Authorization: OAuth
+  oauth_consumer_key="672e71387c0a126f4e13296ecfb2b7bc",
+  oauth_nonce="cfdb7f42de425d94fbc24c11a920c33e",
+  oauth_signature="Vfm148kAgBZ6azEHqds43aY2UsEg3D",
+  oauth_signature_method="HMAC-SHA1",
+  oauth_timestamp="1306871932",
+  oauth_token="819682555b63ab8bd90a4138138e7365",
+  oauth_version="1.0"
+Connection: close
+TKI_TRADEPASS: myPass
+TKI_OVERRIDE: true
+Host: devapi.invest.ally.com
+<span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;FIXML</span> <span class="na">xmlns=</span><span class="s">"http://www.fixprotocol.org/FIXML-5-0-SP2"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;Order</span> <span class="na">TmInForce=</span><span class="s">"0"</span> <span class="na">Typ=</span><span class="s">"1"</span> <span class="na">Side=</span><span class="s">"1"</span> <span class="na">Acct=</span><span class="s">"12345678"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;Instrmt</span> <span class="na">SecTyp=</span><span class="s">"CS"</span> <span class="na">Sym=</span><span class="s">"GE"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;OrdQty</span> <span class="na">Qty=</span><span class="s">"1"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;/Order&gt;</span>
+<span class="nt">&lt;/FIXML&gt;</span>
+</pre>
+    </div>
+    <h3>
+     Response Example (Successful trade with override)
+    </h3>
+    <div class="highlight">
+     <pre><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;response</span> <span class="na">id=</span><span class="s">"77cf30da:12e0091b2c0:-50cb"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;clientorderid&gt;</span>SVI-12345678<span class="nt">&lt;/clientorderid&gt;</span>
+  <span class="nt">&lt;orderstatus&gt;</span>0<span class="nt">&lt;/orderstatus&gt;</span>
+<span class="nt">&lt;/response&gt;</span>
+</pre>
+    </div>
+    <h3>
+     Response Example (Successful request but with override set to false)
+    </h3>
+    <div class="highlight">
+     <pre><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;response</span> <span class="na">id=</span><span class="s">"77cf30da:12e0091b2c0:-4f5d"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;warning&gt;</span>
+    <span class="nt">&lt;warningcode&gt;</span>004<span class="nt">&lt;/warningcode&gt;</span>
+    <span class="nt">&lt;warningtext&gt;</span>This may be a duplicate order. Please go to the Order Status screen and review your open orders before continuing.<span class="nt">&lt;/warningtext&gt;</span>
+  <span class="nt">&lt;/warning&gt;</span>
+  <span class="nt">&lt;estcommission&gt;</span>0<span class="nt">&lt;/estcommission&gt;</span>
+  <span class="nt">&lt;marginrequirement&gt;</span>0.0<span class="nt">&lt;/marginrequirement&gt;</span>
+  <span class="nt">&lt;netamt&gt;</span>25.85<span class="nt">&lt;/netamt&gt;</span>
+  <span class="nt">&lt;principal&gt;</span>20.9<span class="nt">&lt;/principal&gt;</span>
+  <span class="nt">&lt;quotes&gt;</span>
+    <span class="nt">&lt;instrumentquote&gt;</span>
+      <span class="nt">&lt;greeks/&gt;</span>
+      <span class="nt">&lt;instrument&gt;</span>
+        <span class="nt">&lt;desc&gt;</span>GENERAL ELECTRIC CO<span class="nt">&lt;/desc&gt;</span>
+        <span class="nt">&lt;exch&gt;</span>NYE<span class="nt">&lt;/exch&gt;</span>
+        <span class="nt">&lt;sectyp&gt;</span>CS<span class="nt">&lt;/sectyp&gt;</span>
+        <span class="nt">&lt;sym&gt;</span>GE<span class="nt">&lt;/sym&gt;</span>
+      <span class="nt">&lt;/instrument&gt;</span>
+      <span class="nt">&lt;quote&gt;</span>
+        <span class="nt">&lt;askprice&gt;</span>20.91<span class="nt">&lt;/askprice&gt;</span>
+        <span class="nt">&lt;bidprice&gt;</span>20.9<span class="nt">&lt;/bidprice&gt;</span>
+        <span class="nt">&lt;change&gt;</span>0.34<span class="nt">&lt;/change&gt;</span>
+        <span class="nt">&lt;extendedquote&gt;</span>
+          <span class="nt">&lt;asksize&gt;</span>247<span class="nt">&lt;/asksize&gt;</span>
+          <span class="nt">&lt;bidsize&gt;</span>264<span class="nt">&lt;/bidsize&gt;</span>
+          <span class="nt">&lt;dividenddata&gt;</span>
+            <span class="nt">&lt;amt&gt;</span>0.14<span class="nt">&lt;/amt&gt;</span>
+            <span class="nt">&lt;exdate&gt;</span>2010-12-22T00:00:00-05:00<span class="nt">&lt;/exdate&gt;</span>
+            <span class="nt">&lt;paydate&gt;</span>2011-01-25T00:00:00-05:00<span class="nt">&lt;/paydate&gt;</span>
+            <span class="nt">&lt;yield&gt;</span>2.68<span class="nt">&lt;/yield&gt;</span>
+          <span class="nt">&lt;/dividenddata&gt;</span>
+          <span class="nt">&lt;earningspershare&gt;</span>1.15<span class="nt">&lt;/earningspershare&gt;</span>
+          <span class="nt">&lt;high52price&gt;</span>21.0<span class="nt">&lt;/high52price&gt;</span>
+          <span class="nt">&lt;highprice&gt;</span>21.0<span class="nt">&lt;/highprice&gt;</span>
+          <span class="nt">&lt;low52price&gt;</span>13.75<span class="nt">&lt;/low52price&gt;</span>
+          <span class="nt">&lt;lowprice&gt;</span>20.73<span class="nt">&lt;/lowprice&gt;</span>
+          <span class="nt">&lt;openprice&gt;</span>20.77<span class="nt">&lt;/openprice&gt;</span>
+          <span class="nt">&lt;prevclose&gt;</span>20.56<span class="nt">&lt;/prevclose&gt;</span>
+          <span class="nt">&lt;priceearningsratio&gt;</span>18.18<span class="nt">&lt;/priceearningsratio&gt;</span>
+          <span class="nt">&lt;sessionvolume&gt;</span>20000033<span class="nt">&lt;/sessionvolume&gt;</span>
+          <span class="nt">&lt;volume&gt;</span>20321868<span class="nt">&lt;/volume&gt;</span>
+        <span class="nt">&lt;/extendedquote&gt;</span>
+        <span class="nt">&lt;lastprice&gt;</span>20.9<span class="nt">&lt;/lastprice&gt;</span>
+        <span class="nt">&lt;pctchange&gt;</span>1.65<span class="nt">&lt;/pctchange&gt;</span>
+      <span class="nt">&lt;/quote&gt;</span>
+      <span class="nt">&lt;unknownsymbol&gt;</span>false<span class="nt">&lt;/unknownsymbol&gt;</span>
+    <span class="nt">&lt;/instrumentquote&gt;</span>
+  <span class="nt">&lt;/quotes&gt;</span>
+  <span class="nt">&lt;secfee&gt;</span>0.0<span class="nt">&lt;/secfee&gt;</span>
+<span class="nt">&lt;/response&gt;</span>
+</pre>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

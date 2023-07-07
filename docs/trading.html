@@ -1,0 +1,466 @@
+<html>
+ <head>
+  <style type="text/css">
+   .callout { background-color: #6ae6ef; }
+   .highlight { background-color: #dee2e6; padding:2ch; }
+  </style>
+  <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" rel="stylesheet"/>
+ </head>
+ <body class="bg-light">
+  <div class="container">
+   <div class="col-sm-9">
+    <h2>
+     Trading
+    </h2>
+    <p>
+     This page contains FIXML examples of trades that can be made through the Ally Invest API. Currently OTO and OCO orders are unsupported by the API. You can use
+     <a class="internal present" href="accounts-id-orders-preview-post.html">
+      accounts/:id/orders/preview
+     </a>
+     to preview orders and
+     <a class="internal present" href="accounts-id-orders-get.html">
+      accounts/:id/orders
+     </a>
+     to check the status and place orders.
+    </p>
+    <h3>
+     Common Stock Actions
+    </h3>
+    <p>
+     Common stock actions are delimited by the FIXML attribute Side.
+    </p>
+    <h3>
+     Buy Order
+    </h3>
+    <p>
+     <strong>
+      Example
+     </strong>
+     Place a day order to buy 1 share of F at market price on account 12345678.
+    </p>
+    <pre><code>&lt;FIXML xmlns="http://www.fixprotocol.org/FIXML-5-0-SP2"&gt;
+  &lt;Order TmInForce="0" Typ="1" Side="1" Acct="12345678"&gt;
+    &lt;Instrmt SecTyp="CS" Sym="F"/&gt;
+    &lt;OrdQty Qty="1"/&gt;
+  &lt;/Order&gt;
+&lt;/FIXML&gt;
+</code></pre>
+    <h3>
+     Sell Order
+    </h3>
+    <p>
+     <strong>
+      Example
+     </strong>
+     Place a day order to sell 1 share of F at market price on account 12345678.
+    </p>
+    <pre><code>&lt;FIXML xmlns="http://www.fixprotocol.org/FIXML-5-0-SP2"&gt;
+    &lt;Order TmInForce="0" Typ="1" Side="2" Acct="12345678"&gt;
+        &lt;Instrmt SecTyp="CS" Sym="IBM"/&gt;
+        &lt;OrdQty Qty="1"/&gt;
+    &lt;/Order&gt;
+&lt;/FIXML&gt;
+</code></pre>
+    <h3>
+     Sell Short (opening a short position)
+    </h3>
+    <p>
+     <strong>
+      Example
+     </strong>
+     Place a day order to sell short 1 share of F at $22.00 on account 12345678.
+    </p>
+    <pre><code>&lt;FIXML xmlns="http://www.fixprotocol.org/FIXML-5-0-SP2"&gt;
+  &lt;Order TmInForce="0" Typ="2" Side="5" Px="22" Acct="12345678"&gt;
+    &lt;Instrmt SecTyp="CS" Sym="F"/&gt;
+    &lt;OrdQty Qty="1"/&gt;
+  &lt;/Order&gt;
+&lt;/FIXML&gt;
+</code></pre>
+    <h3>
+     Buy to Cover (closing a short position)
+    </h3>
+    <p>
+     <strong>
+      Example
+     </strong>
+     Place a day order to buy to cover 1 share of F at $13 on account 12345678.
+    </p>
+    <pre><code>&lt;FIXML xmlns="http://www.fixprotocol.org/FIXML-5-0-SP2"&gt;
+  &lt;Order TmInForce="0" Typ="2" Side="1" AcctTyp="5" Px="13" Acct="12345678"&gt;
+    &lt;Instrmt SecTyp="CS" Sym="F"/&gt;
+    &lt;OrdQty Qty="1"/&gt;
+  &lt;/Order&gt;
+&lt;/FIXML&gt;
+</code></pre>
+    <h3>
+     Modifying Stock Orders
+    </h3>
+    <h3>
+     Change Order
+    </h3>
+    <p>
+     You can cancel/replace any open order.
+    </p>
+    <p>
+     <strong>
+      Example
+     </strong>
+     Place a new day order to buy 1 share of F at a limit price of $15 on account 12345678 replacing the original order number SVI-12345678.
+    </p>
+    <pre><code>&lt;FIXML xmlns="http://www.fixprotocol.org/FIXML-5-0-SP2"&gt;
+  &lt;OrdCxlRplcReq TmInForce="0" Typ="2" Side="1" Px="15" Acct="12345678" OrigID="SVI-12345678"&gt;
+      &lt;Instrmt SecTyp="CS" Sym="F"/&gt;
+      &lt;OrdQty Qty="1"/&gt;
+  &lt;/OrdCxlRplcReq&gt;
+&lt;/FIXML&gt;
+</code></pre>
+    <h3>
+     Cancel Order
+    </h3>
+    <p>
+     <strong>
+      Example
+     </strong>
+     Cancel the order SVI-12345678 on account 12345678.
+    </p>
+    <pre><code>&lt;FIXML xmlns="http://www.fixprotocol.org/FIXML-5-0-SP2"&gt;
+  &lt;OrdCxlReq TmInForce="0" Typ="2" Side="1" OrigID="SVI-12345678" Acct="12345678"&gt;
+    &lt;Instrmt SecTyp="CS" Sym="F"/&gt;
+    &lt;OrdQty Qty="1"/&gt;
+  &lt;/OrdCxlReq&gt;
+&lt;/FIXML&gt;
+</code></pre>
+    <h3>
+     Option Actions
+    </h3>
+    <p>
+     With option actions the FIXML attribute Side and PosEfct are the key differentiators.
+    </p>
+    <h3>
+     Buy to Open (opening a long option purchase)
+    </h3>
+    <p>
+     <strong>
+      Example
+     </strong>
+     Place a limit order buying to open 4 contracts of IBM Jan 18, 2014 $190 Call at a limit of 21.00 on account 12345678.
+    </p>
+    <pre><code>&lt;FIXML xmlns="http://www.fixprotocol.org/FIXML-5-0-SP2"&gt;
+  &lt;Order TmInForce="0" Typ="2" Side="1" Px="21.00" PosEfct="O" Acct="12345678"&gt;
+    &lt;Instrmt CFI="OC" SecTyp="OPT" MatDt="2014-01-18T00:00:00.000-05:00" StrkPx="190" Sym="IBM"/&gt;
+    &lt;OrdQty Qty="4"/&gt;
+  &lt;/Order&gt;
+&lt;/FIXML&gt;
+</code></pre>
+    <h3>
+     Sell to Open (opening a short option sell)
+    </h3>
+    <p>
+     <strong>
+      Example
+     </strong>
+     Place a 5.10 limit order to sell to open 7 contracts of the COST Jan 19, 2013 $90.00 Call on account 12345678.
+    </p>
+    <pre><code>&lt;FIXML xmlns="http://www.fixprotocol.org/FIXML-5-0-SP2"&gt;
+    &lt;Order TmInForce="1" Typ="2" Side="2" Px="5.10" PosEfct="O" Acct="12345678"&gt;
+        &lt;Instrmt CFI="OC" SecTyp="OPT" MatDt="2013-01-19T00:00:00.000-05:00" StrkPx="90.00" Sym="COST"/&gt;
+        &lt;OrdQty Qty="7"/&gt;
+    &lt;/Order&gt;
+&lt;/FIXML&gt;
+</code></pre>
+    <h3>
+     Buy to Close (closing a previously opened short option)
+    </h3>
+    <p>
+     <strong>
+      Example
+     </strong>
+     Place a market order buying to close 1 contract of F at a limit of .19 with strike price $16, expiring Feb. 11th 2011 on account 12345678
+    </p>
+    <pre><code>&lt;FIXML xmlns="http://www.fixprotocol.org/FIXML-5-0-SP2"&gt;
+  &lt;Order TmInForce="0" Typ="2" Side="1" Px=".19" PosEfct="C" Acct="12345678"&gt;
+    &lt;Instrmt CFI="OC" SecTyp="OPT" MatDt="2011-02-11T00:00:00.000-05:00" StrkPx="16" Sym="F"/&gt;
+    &lt;OrdQty Qty="1"/&gt;
+  &lt;/Order&gt;
+&lt;/FIXML&gt;
+</code></pre>
+    <h3>
+     Sell to Close (closing a previously opened long option)
+    </h3>
+    <p>
+     <strong>
+      Example
+     </strong>
+     Place a market order selling to close 1 contract of F at a limit of .19 with strike price $16, expiring Feb. 11th 2011 on account 12345678
+    </p>
+    <pre><code>&lt;FIXML xmlns="http://www.fixprotocol.org/FIXML-5-0-SP2"&gt;
+  &lt;Order TmInForce="0" Typ="2" Side="2" Px=".19" PosEfct="C" Acct="12345678"&gt;
+    &lt;Instrmt CFI="OC" SecTyp="OPT" MatDt="2011-02-11T00:00:00.000-05:00" StrkPx="16" Sym="F"/&gt;
+    &lt;OrdQty Qty="1"/&gt;
+  &lt;/Order&gt;
+&lt;/FIXML&gt;
+</code></pre>
+    <h3>
+     Modifying Option Orders
+    </h3>
+    <h3>
+     Change Order
+    </h3>
+    <p>
+     <strong>
+      Example
+     </strong>
+     Place a change order buying to open 4 contracts of IBM Jan 18, 2014 $190 Call at a limit of 21.20 on account 12345678 for order id SVI-56657005.
+    </p>
+    <pre><code>&lt;FIXML xmlns="http://www.fixprotocol.org/FIXML-5-0-SP2"&gt;
+    &lt;OrdCxlRplcReq TmInForce="0" Typ="2" Side="1" Px="21.20" PosEfct="O"
+      Acct="12345678" OrigID="SVI-56657005"&gt;
+      &lt;Instrmt CFI="OC" SecTyp="OPT" MatDt="2014-01-18T00:00:00.000-05:00" StrkPx="190" Sym="IBM"/&gt;
+      &lt;OrdQty Qty="4"/&gt;
+    &lt;/OrdCxlRplcReq&gt;
+&lt;/FIXML&gt;
+</code></pre>
+    <h3>
+     Cancel order
+    </h3>
+    <p>
+     <strong>
+      Example
+     </strong>
+     Place a cancel request on order that is buying to open 4 contracts of IBM Jan 18, 2014 $190 Call at a limit of 21.20 on account 12345678 for order id SVI-56657005/2.
+    </p>
+    <pre><code>&lt;FIXML xmlns="http://www.fixprotocol.org/FIXML-5-0-SP2"&gt;
+  &lt;OrdCxlReq TmInForce="0" Typ="2" Side="1" OrigID="SVI-56657005/2" Acct="12345678"&gt;
+    &lt;Instrmt CFI="OC" SecTyp="OPT" MatDt="2014-01-18T00:00:00.000-05:00" StrkPx="190" Sym="IBM"/&gt;
+    &lt;OrdQty Qty="4"/&gt;
+  &lt;/OrdCxlReq&gt;
+&lt;/FIXML&gt;
+</code></pre>
+    <h3>
+     Multi-leg Orders
+    </h3>
+    <p>
+     For multi-leg orders, leg information is repeated for each leg of the order (see example below). Note: Multi-leg orders can be placed as:
+    </p>
+    <ul>
+     <li>
+      Market (OrdTyp="1")
+     </li>
+     <li>
+      Limit as a Debit, Credit, or Even (OrdTyp="2")
+      <ul>
+       <li>
+        Debits are entered as a negative number like the example below (Px="-3.10"). o Credits are entered as a positive number (Px="3.10")
+       </li>
+       <li>
+        Even would be entered as a 0 value (Px="0")
+       </li>
+      </ul>
+     </li>
+    </ul>
+    <h3>
+     New Order
+    </h3>
+    <p>
+     <strong>
+      Example
+     </strong>
+     Place an IBM Call spread order, buying 4 contracts to open the Jan 18, 2014 $190 Call and selling 4 contracts to open the Jan 18, 2014 $200 Call at a 3.10 debit good for the day.
+    </p>
+    <pre><code>&lt;FIXML xmlns="http://www.fixprotocol.org/FIXML-5-0-SP2"&gt;
+  &lt;NewOrdMleg TmInForce="0" Px="-3.10" OrdTyp="2" Acct="12345678"&gt;
+    &lt;Ord OrdQty="4" PosEfct="O"&gt;
+      &lt;Leg Side="1" Strk="190" Mat="2014-01-18T00:00:00.000-05:00" MMY="201401" SecTyp="OPT" CFI="OC" Sym="IBM"/&gt;
+    &lt;/Ord&gt;
+    &lt;Ord OrdQty="4" PosEfct="O"&gt;
+      &lt;Leg Side="2" Strk="200" Mat="2014-01-18T00:00:00.000-05:00" MMY="201401" SecTyp="OPT" CFI="OC" Sym="IBM"/&gt;
+    &lt;/Ord&gt;
+  &lt;/NewOrdMleg&gt;
+&lt;/FIXML&gt;
+</code></pre>
+    <h3>
+     Request to change a multi-leg order
+    </h3>
+    <p>
+     <strong>
+      Example
+     </strong>
+     Request to change the IBM call spread (from the new order example above).
+    </p>
+    <pre><code>&lt;FIXML xmlns="http://www.fixprotocol.org/FIXML-5-0-SP2"&gt;
+    &lt;MlegOrdCxlRplc TmInForce="0" Px="-3.60" OrdTyp="2" Acct="12345678" OrigClOrdID="SVI-56656615"&gt;
+      &lt;Ord OrdQty="4" PosEfct="O"&gt;
+        &lt;Leg Side="1" Strk="190" Mat="2014-01-18T00:00:00.000-05:00" MMY="201401" SecTyp="OPT" CFI="OC" Sym="IBM"/&gt;
+      &lt;/Ord&gt;
+      &lt;Ord OrdQty="4" PosEfct="O"&gt;
+        &lt;Leg Side="2" Strk="200" Mat="2014-01-18T00:00:00.000-05:00" MMY="201401" SecTyp="OPT" CFI="OC" Sym="IBM"/&gt;
+      &lt;/Ord&gt;
+    &lt;/MlegOrdCxlRplc&gt;
+&lt;/FIXML&gt;
+</code></pre>
+    <h3>
+     Request to cancel a multi-leg order
+    </h3>
+    <p>
+     <strong>
+      Example
+     </strong>
+     Request to cancel the IBM call spread (from the new order example above).
+    </p>
+    <pre><code>&lt;FIXML xmlns="http://www.fixprotocol.org/FIXML-5-0-SP2"&gt;
+    &lt;OrdCxlReq OrigID="SVI-56656487" Acct="12345678"&gt;
+        &lt;Instrmt SecTyp="MLEG" Sym="IBM"/&gt;
+    &lt;/OrdCxlReq&gt;
+&lt;/FIXML&gt;
+</code></pre>
+    <h3>
+     Trade Parameters
+    </h3>
+    <h3>
+     Type
+    </h3>
+    <p>
+     Different trade price types are delimited by FIXML attribute Typ. (or OrdTyp for multi-leg option orders).
+    </p>
+    <h5>
+     Market
+    </h5>
+    <p>
+     An order to buy or sell an investment immediately at the best available current price.
+    </p>
+    <p>
+     <strong>
+      Example
+     </strong>
+     Place a day order to buy 1 share of F at market price on account 12345678
+    </p>
+    <pre><code>&lt;FIXML xmlns="http://www.fixprotocol.org/FIXML-5-0-SP2"&gt;
+  &lt;Order TmInForce="0" Typ="1" Side="1" Acct="12345678"&gt;
+    &lt;Instrmt SecTyp="CS" Sym="F"/&gt;
+    &lt;OrdQty Qty="1"/&gt;
+  &lt;/Order&gt;
+&lt;/FIXML&gt;
+</code></pre>
+    <h5>
+     Limit
+    </h5>
+    <p>
+     An order placed with a brokerage to buy or sell a set number of shares at a specified price or better.
+    </p>
+    <p>
+     <strong>
+      Example
+     </strong>
+     Place a day order to buy 1 share of F at a limit price of $15 on account 12345678
+    </p>
+    <pre><code>&lt;FIXML xmlns="http://www.fixprotocol.org/FIXML-5-0-SP2"&gt;
+  &lt;Order TmInForce="0" Typ="2" Side="1" Px="15" Acct="12345678"&gt;
+    &lt;Instrmt SecTyp="CS" Sym="F"/&gt;
+  &lt;OrdQty Qty="1"/&gt; &lt;/Order&gt;
+&lt;/FIXML&gt;
+</code></pre>
+    <h5>
+     Stop
+    </h5>
+    <p>
+     An order to buy or sell a security when its price surpasses a particular point, thus ensuring a greater probability of achieving a predetermined entry or exit price. Once the price surpasses the predefined entry/exit point, the stop order becomes a market order.
+    </p>
+    <p>
+     <strong>
+      Example
+     </strong>
+     Place a day order to buy 1 share of F with a stop price of $18 on account 12345678
+    </p>
+    <pre><code>&lt;FIXML xmlns="http://www.fixprotocol.org/FIXML-5-0-SP2"&gt;
+  &lt;Order TmInForce="0" Typ="3" Side="1" StopPx="18" Acct="12345678"&gt;
+    &lt;Instrmt SecTyp="CS" Sym="F"/&gt;
+    &lt;OrdQty Qty="1"/&gt;
+  &lt;/Order&gt;
+&lt;/FIXML&gt;
+</code></pre>
+    <h5>
+     Stop Limit
+    </h5>
+    <p>
+     A stop-limit order will be executed at a specified price (or better) after a given stop price has been reached. Once the stop price is reached, the stop-limit order becomes a limit order to buy (or sell) at the limit price or better.
+    </p>
+    <p>
+     <strong>
+      Example
+     </strong>
+     Place a day order to buy 1 share of F with a stop price of $18 and a limit price of $19 on account 12345678.
+    </p>
+    <pre><code>&lt;FIXML xmlns="http://www.fixprotocol.org/FIXML-5-0-SP2"&gt;
+  &lt;Order TmInForce="0" Typ="4" Side="1" Px="19" StopPx="18" Acct="12345678"&gt;
+    &lt;Instrmt SecTyp="CS" Sym="F"/&gt;
+    &lt;OrdQty Qty="1"/&gt;
+  &lt;/Order&gt;
+&lt;/FIXML&gt;
+</code></pre>
+    <h3>
+     Term
+    </h3>
+    <p>
+     Trade terms are delimited by the FIXML attribute TmInForce.
+    </p>
+    <h5>
+     Day
+    </h5>
+    <p>
+     Any order to buy or sell a security that automatically expires if not executed on the day the order is placed.
+    </p>
+    <p>
+     <strong>
+      Example
+     </strong>
+     Place a day order to buy 1 share of F at market price on account 12345678
+    </p>
+    <pre><code>&lt;FIXML xmlns="http://www.fixprotocol.org/FIXML-5-0-SP2"&gt;
+  &lt;Order TmInForce="0" Typ="1" Side="1" Acct="12345678"&gt;
+    &lt;Instrmt SecTyp="CS" Sym="F"/&gt;
+    &lt;OrdQty Qty="1"/&gt;
+  &lt;/Order&gt;
+&lt;/FIXML&gt;
+</code></pre>
+    <h5>
+     Market on Close (SecTyp=CS only)
+    </h5>
+    <p>
+     A market order to be executed as near to the end of the exchange day as possible. This is only possible on common stock orders.
+    </p>
+    <p>
+     <strong>
+      Example
+     </strong>
+     Place market on close order to buy 1 share of F on account 12345678
+    </p>
+    <pre><code>&lt;FIXML xmlns="http://www.fixprotocol.org/FIXML-5-0-SP2"&gt;
+  &lt;Order TmInForce="7" Typ="1" Side="1" Acct="12345678"&gt;
+    &lt;Instrmt SecTyp="CS" Sym="F"/&gt;
+    &lt;OrdQty Qty="1"/&gt;
+  &lt;/Order&gt;
+&lt;/FIXML&gt;
+</code></pre>
+    <h5>
+     GTC (Good 'Til Canceled)
+    </h5>
+    <p>
+     An order to buy or sell that remains open in your account for 60 calendar days from the original date placed, unless executed or canceled. Changes or edits to a GTC order will not affect the original order date.
+    </p>
+    <p>
+     <strong>
+      Example
+     </strong>
+     Place a good 'til canceled order to buy 1 share of F at a limit price of $18 on account 12345678
+    </p>
+    <pre><code>&lt;FIXML xmlns="http://www.fixprotocol.org/FIXML-5-0-SP2"&gt;
+  &lt;Order TmInForce="1" Typ="2" Side="1" Px="18" Acct="12345678"&gt;
+    &lt;Instrmt SecTyp="CS" Sym="F"/&gt; &lt;OrdQty Qty="1"/&gt;
+  &lt;/Order&gt;
+&lt;/FIXML&gt;
+</code></pre>
+   </div>
+  </div>
+ </body>
+</html>

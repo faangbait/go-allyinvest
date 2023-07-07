@@ -1,0 +1,114 @@
+<html>
+ <head>
+  <style type="text/css">
+   .callout { background-color: #6ae6ef; }
+   .highlight { background-color: #dee2e6; padding:2ch; }
+  </style>
+  <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" rel="stylesheet"/>
+ </head>
+ <body class="bg-light">
+  <div class="container">
+   <div class="col-sm-9">
+    <h2>
+     +
+    </h2>
+    <h2>
+     Java:
+    </h2>
+    <p>
+     This short example will show you how to authorize your own account against the API and make requests. Note that we aren't following a full OAuth flow here because as a developer you already have access to your own access token and secret.
+    </p>
+    <p>
+     This example makes use of
+     <a href="https://github.com/fernandezpablo85/scribe-java" rel="external" target="_blank">
+      Scribe OAuth library for Java
+     </a>
+     which requires that we define a
+     <code>
+      TradeKingApi
+     </code>
+     class that extends the
+     <code>
+      DefaultApi10a
+     </code>
+     class provided by Scribe.
+    </p>
+    <div class="highlight">
+     <pre><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">tradeking</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.scribe.builder.api.DefaultApi10a</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.scribe.model.Token</span><span class="o">;</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">TradeKingApi</span> <span class="kd">extends</span> <span class="n">DefaultApi10a</span>
+<span class="o">{</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">AUTHORIZE_URL</span> <span class="o">=</span> <span class="s">"https://devapi.invest.ally.com/oauth/authorize?oauth_token=%s"</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">REQUEST_TOKEN_RESOURCE</span> <span class="o">=</span> <span class="s">"https://devapi.invest.ally.com/oauth/request_token"</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">ACCESS_TOKEN_RESOURCE</span> <span class="o">=</span> <span class="s">"https://devapi.invest.ally.com/oauth/access_token"</span><span class="o">;</span>
+  
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="n">String</span> <span class="nf">getAccessTokenEndpoint</span><span class="o">()</span>
+  <span class="o">{</span>
+    <span class="k">return</span> <span class="n">ACCESS_TOKEN_RESOURCE</span><span class="o">;</span>
+  <span class="o">}</span>
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="n">String</span> <span class="nf">getRequestTokenEndpoint</span><span class="o">()</span>
+  <span class="o">{</span>
+    <span class="k">return</span> <span class="n">REQUEST_TOKEN_RESOURCE</span><span class="o">;</span>
+  <span class="o">}</span>
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="n">String</span> <span class="nf">getAuthorizationUrl</span><span class="o">(</span><span class="n">Token</span> <span class="n">requestToken</span><span class="o">)</span>
+  <span class="o">{</span>
+    <span class="k">return</span> <span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="n">AUTHORIZE_URL</span><span class="o">,</span> <span class="n">requestToken</span><span class="o">.</span><span class="na">getToken</span><span class="o">());</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre>
+    </div>
+    <p>
+     We can then use the
+     <code>
+      TradeKingApi
+     </code>
+     class to instantiate an
+     <code>
+      OAuthService
+     </code>
+     and
+     <code>
+      Token
+     </code>
+     to make requests against the API.
+    </p>
+    <div class="highlight">
+     <pre><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">tradeking</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.scribe.builder.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.scribe.model.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.scribe.oauth.*</span><span class="o">;</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">TradeKingClient</span>
+<span class="o">{</span>
+	<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">CONSUMER_KEY</span> <span class="o">=</span> <span class="s">"0cc175b9c0f1b6a831c399e269772661"</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">CONSUMER_SECRET</span> <span class="o">=</span> <span class="s">"ff2513194e75315625628304c9eb66e8"</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">OAUTH_TOKEN</span> <span class="o">=</span> <span class="s">"150a96573adf12b21dab621e85497e6e"</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">OAUTH_TOKEN_SECRET</span> <span class="o">=</span> <span class="s">"5c7b57d450a71d378a5eda991f809e56"</span><span class="o">;</span>
+	
+	<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">PROTECTED_RESOURCE_URL</span> <span class="o">=</span> <span class="s">"https://devapi.invest.ally.com/v1/member/profile.json"</span><span class="o">;</span>
+  
+	<span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span>
+	<span class="o">{</span>
+		<span class="n">OAuthService</span> <span class="n">service</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ServiceBuilder</span><span class="o">()</span>
+                                <span class="o">.</span><span class="na">provider</span><span class="o">(</span><span class="n">TradeKingApi</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+                                <span class="o">.</span><span class="na">apiKey</span><span class="o">(</span><span class="n">CONSUMER_KEY</span><span class="o">)</span>
+                                <span class="o">.</span><span class="na">apiSecret</span><span class="o">(</span><span class="n">CONSUMER_SECRET</span><span class="o">)</span>
+                                <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+		<span class="n">Token</span> <span class="n">accessToken</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Token</span><span class="o">(</span><span class="n">OAUTH_TOKEN</span><span class="o">,</span> <span class="n">OAUTH_TOKEN_SECRET</span><span class="o">);</span>
+    
+		<span class="c1">// Now let's go and ask for a protected resource!</span>
+		<span class="n">OAuthRequest</span> <span class="n">request</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OAuthRequest</span><span class="o">(</span><span class="n">Verb</span><span class="o">.</span><span class="na">GET</span><span class="o">,</span> <span class="n">PROTECTED_RESOURCE_URL</span><span class="o">);</span>
+		<span class="n">service</span><span class="o">.</span><span class="na">signRequest</span><span class="o">(</span><span class="n">accessToken</span><span class="o">,</span> <span class="n">request</span><span class="o">);</span>
+		<span class="n">Response</span> <span class="n">response</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="na">send</span><span class="o">();</span>
+		<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">response</span><span class="o">.</span><span class="na">getBody</span><span class="o">());</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+</pre>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

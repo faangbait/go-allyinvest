@@ -1,0 +1,39 @@
+<html>
+ <head>
+  <style type="text/css">
+   .callout { background-color: #6ae6ef; }
+   .highlight { background-color: #dee2e6; padding:2ch; }
+  </style>
+  <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" rel="stylesheet"/>
+ </head>
+ <body class="bg-light">
+  <div class="container">
+   <div class="col-sm-9">
+    <h2>
+     Streaming with Ruby
+    </h2>
+    <p>
+     This short example will show you how to authorize your own account against the API and make requests. Note that we aren't following a full OAuth flow here because as a developer you already have access to your own access token and secret.
+    </p>
+    <div class="highlight">
+     <pre><span class="c1"># Use the OAuth gem</span>
+<span class="nb">require</span> <span class="s1">'rubygems'</span>
+<span class="nb">require</span> <span class="s1">'oauth'</span>
+<span class="c1"># Your key/secrets for authentication</span>
+<span class="no">CONSUMER_KEY</span>        <span class="o">=</span> <span class="s1">'0cc175b9c0f1b6a831c399e269772661'</span>
+<span class="no">CONSUMER_SECRET</span>     <span class="o">=</span> <span class="s1">'ff2513194e75315625628304c9eb66e8'</span>
+<span class="no">ACCESS_TOKEN</span>        <span class="o">=</span> <span class="s1">'150a96573adf12b21dab621e85497e6e'</span>
+<span class="no">ACCESS_TOKEN_SECRET</span> <span class="o">=</span> <span class="s1">'5c7b57d450a71d378a5eda991f809e56'</span>
+<span class="c1"># Set up an OAuth Consumer</span>
+<span class="vi">@consumer</span> <span class="o">=</span> <span class="no">OAuth</span><span class="o">::</span><span class="no">Consumer</span><span class="o">.</span><span class="n">new</span> <span class="no">CONSUMER_KEY</span><span class="p">,</span> <span class="no">CONSUMER_SECRET</span><span class="p">,</span> <span class="p">{</span> <span class="ss">:site</span> <span class="o">=&gt;</span> <span class="s1">'https://devapi.invest.ally.com'</span> <span class="p">}</span>
+<span class="c1"># Manually update the access token/secret.  Typically this would be done through an OAuth callback when </span>
+<span class="c1"># authenticating other users.</span>
+<span class="vi">@access_token</span> <span class="o">=</span> <span class="no">OAuth</span><span class="o">::</span><span class="no">AccessToken</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@consumer</span><span class="p">,</span> <span class="no">ACCESS_TOKEN</span><span class="p">,</span> <span class="no">ACCESS_TOKEN_SECRET</span><span class="p">)</span>
+<span class="c1"># Make a request to the API endpoint and display the response</span>
+<span class="nb">puts</span> <span class="vi">@access_token</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'/v1/accounts.json'</span><span class="p">,</span> <span class="p">{</span><span class="s1">'Accept'</span> <span class="o">=&gt;</span> <span class="s1">'application/json'</span><span class="p">})</span>
+</pre>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

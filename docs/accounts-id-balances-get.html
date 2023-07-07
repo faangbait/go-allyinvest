@@ -1,0 +1,409 @@
+<html>
+ <head>
+  <style type="text/css">
+   .callout { background-color: #6ae6ef; }
+   .highlight { background-color: #dee2e6; padding:2ch; }
+  </style>
+  <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" rel="stylesheet"/>
+ </head>
+ <body class="bg-light">
+  <div class="container">
+   <div class="col-sm-9">
+    <h2>
+     GET accounts/:id/balances {.format}
+    </h2>
+    <h3>
+     Description
+    </h3>
+    <p>
+     This call will return detailed balance information for the account number specified in the URI.
+    </p>
+    <div class="table-responsive">
+     <table class="table table-bordered table-condensed table-striped">
+      <tr>
+       <th colspan="2">
+        Authentication Required
+       </th>
+      </tr>
+      <tr>
+       <td>
+        Yes
+       </td>
+       <td>
+        OAuth 1.0a
+       </td>
+      </tr>
+      <tr>
+       <th colspan="2">
+        URI Parameters
+       </th>
+      </tr>
+      <tr>
+       <td>
+        id
+       </td>
+       <td>
+        a valid account number
+       </td>
+      </tr>
+      <tr>
+       <td>
+        format
+       </td>
+       <td>
+        a response format, default is xml (See
+        <a class="internal present" href="response-structure.html">
+         Response Structure
+        </a>
+        )
+       </td>
+      </tr>
+      <tr>
+       <th colspan="2">
+        Example URL
+       </th>
+      </tr>
+      <tr>
+       <td colspan="2">
+        https://devapi.invest.ally.com/v1/accounts/12345678/balances.xml
+       </td>
+      </tr>
+     </table>
+    </div>
+    <h3>
+     Data Fields
+    </h3>
+    <div class="table-responsive">
+     <table class="table table-striped table-bordered table-condensed">
+      <tr>
+       <th>
+        Data Tag
+       </th>
+       <th>
+        Description
+       </th>
+      </tr>
+      <tr>
+       <td>
+        account
+       </td>
+       <td>
+        Account number
+       </td>
+      </tr>
+      <tr>
+       <td>
+        accountvalue
+       </td>
+       <td>
+        Account value
+       </td>
+      </tr>
+      <tr>
+       <td>
+        accruedinterest
+       </td>
+       <td>
+        Amount of any accrued interest on the account
+       </td>
+      </tr>
+      <tr>
+       <td>
+        cash
+       </td>
+       <td>
+        cash
+       </td>
+      </tr>
+      <tr>
+       <td>
+        cashavailable
+       </td>
+       <td>
+        cash available
+       </td>
+      </tr>
+      <tr>
+       <td>
+        cashavailableforwithdrawal
+       </td>
+       <td>
+        Cash available for withdrawal (cash &amp; margin accounts only, n/a for retirement accounts)
+       </td>
+      </tr>
+      <tr>
+       <td>
+        cashbalance
+       </td>
+       <td>
+        cash balance
+       </td>
+      </tr>
+      <tr>
+       <td>
+        cashmv
+       </td>
+       <td>
+        Value of cash market value
+       </td>
+      </tr>
+      <tr>
+       <td>
+        equitypercentage
+       </td>
+       <td>
+        Percentage of equity (margin accounts only)
+       </td>
+      </tr>
+      <tr>
+       <td>
+        fedcall
+       </td>
+       <td>
+        Value of any fed call on account
+       </td>
+      </tr>
+      <tr>
+       <td>
+        housecall
+       </td>
+       <td>
+        Value of any house call
+       </td>
+      </tr>
+      <tr>
+       <td>
+        longoptions
+       </td>
+       <td>
+        Long option market value
+       </td>
+      </tr>
+      <tr>
+       <td>
+        longstocks
+       </td>
+       <td>
+        Long stock market value
+       </td>
+      </tr>
+      <tr>
+       <td>
+        marginbalance
+       </td>
+       <td>
+        Margin balance (- indicates debit balance, + indicates credit balance)
+       </td>
+      </tr>
+      <tr>
+       <td>
+        marginmv
+       </td>
+       <td>
+        Margin market value
+       </td>
+      </tr>
+      <tr>
+       <td>
+        mmf
+       </td>
+       <td>
+        Money market fund
+       </td>
+      </tr>
+      <tr>
+       <td>
+        openbuyvalue
+       </td>
+       <td>
+        Open buy value
+       </td>
+      </tr>
+      <tr>
+       <td>
+        options
+       </td>
+       <td>
+        Total option market value. Path: /response/accountbalance/securities/
+       </td>
+      </tr>
+      <tr>
+       <td>
+        options
+       </td>
+       <td>
+        Options buying power. Path: /response/accountbalance/buyingpower/
+       </td>
+      </tr>
+      <tr>
+       <td>
+        shortbalance
+       </td>
+       <td>
+        short balance (credit for sell?)
+       </td>
+      </tr>
+      <tr>
+       <td>
+        shortmv
+       </td>
+       <td>
+        short market value
+       </td>
+      </tr>
+      <tr>
+       <td>
+        shortoptions
+       </td>
+       <td>
+        Short option market value
+       </td>
+      </tr>
+      <tr>
+       <td>
+        shortstocks
+       </td>
+       <td>
+        Short stock market value
+       </td>
+      </tr>
+      <tr>
+       <td>
+        sodoptions
+       </td>
+       <td>
+        Start of day options buying power
+       </td>
+      </tr>
+      <tr>
+       <td>
+        sodstock
+       </td>
+       <td>
+        Start of day stock buying power
+       </td>
+      </tr>
+      <tr>
+       <td>
+        stock
+       </td>
+       <td>
+        Stock buying power
+       </td>
+      </tr>
+      <tr>
+       <td>
+        stocks
+       </td>
+       <td>
+        Total stock market value
+       </td>
+      </tr>
+      <tr>
+       <td>
+        total
+       </td>
+       <td>
+        Total cash balance. Path: /response/accountbalance/money/
+       </td>
+      </tr>
+      <tr>
+       <td>
+        total
+       </td>
+       <td>
+        Total market value (stock &amp; option). Path: /response/accountbalance/securities/
+       </td>
+      </tr>
+      <tr>
+       <td>
+        uncleareddeposits
+       </td>
+       <td>
+        uncleared deposits
+       </td>
+      </tr>
+      <tr>
+       <td>
+        unsettledfunds
+       </td>
+       <td>
+        unsettle funds
+       </td>
+      </tr>
+      <tr>
+       <td>
+        yield
+       </td>
+       <td>
+        Yield
+       </td>
+      </tr>
+     </table>
+    </div>
+    <h3>
+     Request Example
+    </h3>
+    <div class="highlight">
+     <pre>GET /v1/accounts/123456878/balances.xml HTTP/1.1
+Authorization: OAuth
+  oauth_consumer_key="672e71387c0a126f4e13296ecfb2b7bc",
+  oauth_nonce="cfdb7f42de425d94fbc24c11a920c33e",
+  oauth_signature="Vfm148kAgBZ6azEHqds43aY2UsEg3D",
+  oauth_signature_method="HMAC-SHA1",
+  oauth_timestamp="1306871932",
+  oauth_token="819682555b63ab8bd90a4138138e7365",
+  oauth_version="1.0"
+Connection: close
+Host: devapi.invest.ally.com
+</pre>
+    </div>
+    <h3>
+     Response Example
+    </h3>
+    <div class="highlight">
+     <pre><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;response</span> <span class="na">id=</span><span class="s">"77cf30da:12df25c7074:-7ea6"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;accountbalance&gt;</span>
+    <span class="nt">&lt;account&gt;</span>12345678<span class="nt">&lt;/account&gt;</span>
+    <span class="nt">&lt;accountvalue&gt;</span>67119.41<span class="nt">&lt;/accountvalue&gt;</span>
+    <span class="nt">&lt;buyingpower&gt;</span>
+      <span class="nt">&lt;cashavailableforwithdrawal&gt;</span>66177.48000000001<span class="nt">&lt;/cashavailableforwithdrawal&gt;</span>
+      <span class="nt">&lt;daytrading&gt;</span>264709.84<span class="nt">&lt;/daytrading&gt;</span>
+      <span class="nt">&lt;equitypercentage&gt;</span>100<span class="nt">&lt;/equitypercentage&gt;</span>
+      <span class="nt">&lt;options&gt;</span>66177.48000000001<span class="nt">&lt;/options&gt;</span>
+      <span class="nt">&lt;soddaytrading&gt;</span>264709.84<span class="nt">&lt;/soddaytrading&gt;</span>
+      <span class="nt">&lt;sodoptions&gt;</span>66177.48000000001<span class="nt">&lt;/sodoptions&gt;</span>
+      <span class="nt">&lt;sodstock&gt;</span>132354.96000000002<span class="nt">&lt;/sodstock&gt;</span>
+      <span class="nt">&lt;stock&gt;</span>132354.96000000002<span class="nt">&lt;/stock&gt;</span>
+    <span class="nt">&lt;/buyingpower&gt;</span>
+    <span class="nt">&lt;fedcall&gt;</span>0.0<span class="nt">&lt;/fedcall&gt;</span>
+    <span class="nt">&lt;housecall&gt;</span>0.0<span class="nt">&lt;/housecall&gt;</span>
+    <span class="nt">&lt;money&gt;</span>
+      <span class="nt">&lt;accruedinterest&gt;</span>0.0<span class="nt">&lt;/accruedinterest&gt;</span>
+      <span class="nt">&lt;cash&gt;</span>66134.67<span class="nt">&lt;/cash&gt;</span>
+      <span class="nt">&lt;cashavailable&gt;</span>0.0<span class="nt">&lt;/cashavailable&gt;</span>
+      <span class="nt">&lt;marginbalance&gt;</span>0.0<span class="nt">&lt;/marginbalance&gt;</span>
+      <span class="nt">&lt;mmf&gt;</span>0.02<span class="nt">&lt;/mmf&gt;</span>
+      <span class="nt">&lt;total&gt;</span>66134.69<span class="nt">&lt;/total&gt;</span>
+      <span class="nt">&lt;uncleareddeposits&gt;</span>0.0<span class="nt">&lt;/uncleareddeposits&gt;</span>
+      <span class="nt">&lt;unsettledfunds&gt;</span>0.0<span class="nt">&lt;/unsettledfunds&gt;</span>
+      <span class="nt">&lt;yield&gt;</span>0.0<span class="nt">&lt;/yield&gt;</span>
+    <span class="nt">&lt;/money&gt;</span>
+    <span class="nt">&lt;securities&gt;</span>
+      <span class="nt">&lt;longoptions&gt;</span>0.0<span class="nt">&lt;/longoptions&gt;</span>
+      <span class="nt">&lt;longstocks&gt;</span>57.39<span class="nt">&lt;/longstocks&gt;</span>
+      <span class="nt">&lt;options&gt;</span>0.0<span class="nt">&lt;/options&gt;</span>
+      <span class="nt">&lt;shortoptions&gt;</span>0.0<span class="nt">&lt;/shortoptions&gt;</span>
+      <span class="nt">&lt;shortstocks&gt;</span>0.0<span class="nt">&lt;/shortstocks&gt;</span>
+      <span class="nt">&lt;stocks&gt;</span>57.39<span class="nt">&lt;/stocks&gt;</span>
+      <span class="nt">&lt;total&gt;</span>984.72<span class="nt">&lt;/total&gt;</span>
+    <span class="nt">&lt;/securities&gt;</span>
+  <span class="nt">&lt;/accountbalance&gt;</span>
+<span class="nt">&lt;/response&gt;</span>
+</pre>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>
