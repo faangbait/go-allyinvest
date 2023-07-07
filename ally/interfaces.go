@@ -178,10 +178,11 @@ type IPostOrderWarn struct {
 
 type IPostPreview struct {
 	AllyResponse
-	EstCommission float64      `xml:"estcommission"`
-	SecFee        float64      `xml:"secfee"`
-	MarginReq     float64      `xml:"marginrequirement"`
-	Principal     float64      `xml:"principal"`
+	EstCommission float64      `xml:"estcommission,omitempty"`
+	SecFee        float64      `xml:"secfee,omitempty"`
+	MarginReq     float64      `xml:"marginrequirement,omitempty"`
+	Principal     float64      `xml:"principal,omitempty"`
+	WarningText   string       `xml:"warningtext,omitempty"`
 	FinData       ITradeQuotes `xml:"quotes>instrumentquote"`
 }
 

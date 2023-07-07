@@ -3,8 +3,6 @@ package ally
 import (
 	"encoding/xml"
 	"fmt"
-	"log"
-	"math"
 	"net/url"
 )
 
@@ -27,6 +25,128 @@ func PostPreview(order *Order) (IPostPreview, error) {
 	return resp, err
 }
 
+// Attempts to handle a warning in the manner determined by the OverrideMap
+// In other words, if making this a Limit order solves our problem, we do that.
+// Returns an error if can't or won't override the warning; this should abort the trade.
+func handleWarning(order *Order, preview *IPostPreview) (IPostOrder, error) {
+	if preview.WarningText != "" {
+		switch preview.WarningText {
+		case "DuplicateOrder":
+			order.Transmit = false
+			return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", DuplicateOrder)
+
+		case "UnsettledFunds":
+			if !OverrideMap[UnsettledFunds] {
+				order.Transmit = false
+				return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", UnsettledFunds)
+			}
+
+		case "HigherMarginReq":
+			if !OverrideMap[HigherMarginReq] {
+				order.Transmit = false
+				return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", HigherMarginReq)
+			}
+
+		case "NotMarginable":
+			if !OverrideMap[NotMarginable] {
+				order.Transmit = false
+				return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", NotMarginable)
+			}
+
+		case "MktOrderWhileClosed":
+			if !OverrideMap[MktOrderWhileClosed] {
+				order.Transmit = false
+				return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", MktOrderWhileClosed)
+			}
+			switch order.OrderType {
+			case "MKT", "MOC":
+				order.OrderType = "LMT"
+			case "STP":
+				order.OrderType = "STP LMT"
+			default:
+				return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", MktOrderWhileClosed)
+			}
+
+		case "ExchangeClosed":
+			order.Transmit = false
+			return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", ExchangeClosed)
+
+		case "ForeignSettlementFee":
+			if !OverrideMap[ForeignSettlementFee] {
+				order.Transmit = false
+				return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", ForeignSettlementFee)
+			}
+
+		case "We are not currently accepting Market orders for this security. Please change your order to a Limit order.":
+			if !OverrideMap[NoMarketOrder1] {
+				order.Transmit = false
+				return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", NoMarketOrder1)
+			}
+			switch order.OrderType {
+			case "MKT", "MOC":
+				order.OrderType = "LMT"
+			case "STP":
+				order.OrderType = "STP LMT"
+			default:
+				return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", NoMarketOrder1)
+			}
+
+		case "We are not currently accepting Market or Stop orders. Please place a Limit order.":
+			if !OverrideMap[NoMarketOrder2] {
+				order.Transmit = false
+				return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", NoMarketOrder2)
+			}
+			switch order.OrderType {
+			case "MKT", "MOC":
+				order.OrderType = "LMT"
+			case "STP":
+				order.OrderType = "STP LMT"
+			default:
+				return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", NoMarketOrder2)
+			}
+
+		case "Due to nightly processing we are unable to accept orders between 11:30 PM and 12:00 AM EST. Please replace your order after 12:00 AM .":
+			return IPostOrder{}, fmt.Errorf("tried to place order during maintenance window")
+
+		default:
+			return IPostOrder{}, fmt.Errorf("error text %s; no override implemented", preview.WarningText)
+		}
+	}
+
+	return postOverride(order)
+}
+
+// POST accounts/:id/orders
+// Attempt to post the order. Validate and handle errors according to the rules defined by OverrideMap.
+func PostOrder(order *Order) (IPostOrder, error) {
+	// Validate the order; if we can't, return an error
+	err := ValidateOrder(order)
+	if err != nil {
+		return IPostOrder{}, err
+	}
+
+	// Render the order to fixml; if we can't, return an error
+	_, err = xml.Marshal(Render(order))
+	if err != nil {
+		return IPostOrder{}, fmt.Errorf("got order that couldn't be rendered to xml: %s (%s)", Render(order), err.Error())
+	}
+
+	// Preview the order, check for warnings
+	preview, err := PostPreview(order)
+	if err != nil {
+		return IPostOrder{}, fmt.Errorf("got order that couldn't be previewed")
+	}
+
+	// Handle any warnings that occurred
+	resp, err := handleWarning(order, &preview)
+
+	if err != nil {
+		return resp, fmt.Errorf("got warning we couldn't handle")
+	}
+
+	return resp, err
+}
+
 // POST accounts/:id/orders
 // Post the order, overriding warnings.
 func postOverride(order *Order) (IPostOrder, error) {
@@ -44,16 +164,11 @@ func postOverride(order *Order) (IPostOrder, error) {
 	headers["TKI_OVERRIDE"] = []string{"true"}
 	resp, _, err := post[IPostOrder](fmt.Sprintf("accounts/%s/orders", order.Account), data, headers, url.Values{}, tradesRL)
 	return resp, err
-
 }
 
 // Attempt to validate the order. Will coax the order into a valid order by default.
 // To prevent this behavior, set order.DoNotCoax = true
 func ValidateOrder(o *Order) error {
-	if o.Transmit && o.LmtPrice >= MINIMUM_STOCK_PX {
-		return nil
-	}
-
 	// Blank out OrderType for MOC contracts
 	if o.Tif == "MOC" {
 		if o.SecType != "CS" {
@@ -79,110 +194,79 @@ func ValidateOrder(o *Order) error {
 		o.Tif = "DAY"
 	}
 
+	if o.LmtPrice < MINIMUM_STOCK_PX {
+		if o.DoNotCoax {
+			return fmt.Errorf("lmtprice below minimum")
+		}
+		o.LmtPrice = MINIMUM_STOCK_PX
+	}
+
+	if !o.Transmit {
+		return fmt.Errorf("order marked no-transmit")
+	}
+
 	data, _ := xml.Marshal(Render(o))
 	return fmt.Errorf("not a valid order: %s", string(data))
 }
 
-// Attempts to handle a warning in the manner determined by the OverrideMap
-// In other words, if making this a Limit order solves our problem, we do that.
-// Returns an error if can't or won't override the warning; this should abort the trade.
-func handleWarning(order *Order, resp *IPostOrderWarn) error {
-	if resp.Warning.Code == 0 {
-		return nil
-	}
+// // POST accounts/:id/orders
+// // Attempt to post the order. Validate and handle errors according to the rules defined by OverrideMap.
+// func PostOrder(order *Order) (IPostOrder, error) {
+// 	warn := IPostOrderWarn{}
+// 	headers := RequestHeaders()
 
-	log.Printf("order had warnings: %s", resp.Warning.Text)
-	override := OverrideMap[resp.Warning.Code]
+// 	// Validate the order; if we can't, return an error
+// 	err := ValidateOrder(order)
+// 	if err != nil {
+// 		return IPostOrder{}, err
+// 	}
 
-	if !override {
-		order.Transmit = false
-		return fmt.Errorf("error code %d; not overridden", resp.Warning.Code)
-	} else {
-		switch resp.Warning.Code {
-		case MktOrderWhileClosed, ExchangeClosed, NoMarketOrder1, NoMarketOrder2:
-			if order.OrderType == "MKT" || order.OrderType == "MOC" {
-				order.OrderType = "LMT"
-				order.LmtPrice = math.Max(order.LmtPrice, resp.FinData.Quote.LastPx)
-			} else if order.OrderType == "STP" {
-				order.OrderType = "STP LMT"
-				order.LmtPrice = math.Max(order.LmtPrice, resp.FinData.Quote.LastPx)
-			} else {
-				return fmt.Errorf("error code %d; couldn't override", resp.Warning.Code)
-			}
-		default:
-			log.Printf("error code %d; overridden\n", resp.Warning.Code)
-		}
-	}
-	resp.Warning.Text = ""
-	resp.Warning.Code = 0
-	return nil
-}
+// 	// Render the order to fixml; if we can't, return an error
+// 	data, err := xml.Marshal(Render(order))
+// 	if err != nil {
+// 		return IPostOrder{}, fmt.Errorf("got order that couldn't be rendered to xml: %s (%s)", Render(order), err.Error())
+// 	}
 
-// POST accounts/:id/orders
-// Attempt to post the order. Validate and handle errors according to the rules defined by OverrideMap.
-func PostOrder(order *Order) (IPostOrder, error) {
-	warn := IPostOrderWarn{}
-	headers := RequestHeaders()
+// 	// Attempt to post the order.
+// 	resp, body, err := post[IPostOrder](fmt.Sprintf("accounts/%s/orders", order.Account), data, headers, url.Values{}, tradesRL)
 
-	// Validate the order; if we can't, return an error
-	err := ValidateOrder(order)
-	if err != nil {
-		return IPostOrder{}, err
-	}
+// 	if err != nil {
+// 		return IPostOrder{}, fmt.Errorf("got invalid order response: %s (%s)", Render(order), err.Error())
+// 	}
 
-	// Render the order to fixml; if we can't, return an error
-	data, err := xml.Marshal(Render(order))
-	if err != nil {
-		return IPostOrder{}, fmt.Errorf("got order that couldn't be rendered to xml: %s (%s)", Render(order), err.Error())
-	}
+// 	// Check if order contained an unhandled error and handle the custom warning code.
+// 	switch resp.Error {
+// 	case "Success":
+// 		// Order successfully posted as-is. Woohoo!
+// 		return resp, nil
+// 	case "We are not currently accepting Market orders for this security. Please change your order to a Limit order.":
+// 		warn.Warning.Text = resp.Error
+// 		warn.Warning.Code = NoMarketOrder1
+// 	case "We are not currently accepting Market or Stop orders. Please place a Limit order.":
+// 		warn.Warning.Text = resp.Error
+// 		warn.Warning.Code = NoMarketOrder2
+// 	case "Due to nightly processing we are unable to accept orders between 11:30 PM and 12:00 AM EST. Please replace your order after 12:00 AM .":
+// 		warn.Warning.Text = resp.Error
+// 		warn.Warning.Code = MaintenanceWindow
+// 	}
 
-	// Attempt to post the order.
-	resp, body, err := post[IPostOrder](fmt.Sprintf("accounts/%s/orders", order.Account), data, headers, url.Values{}, tradesRL)
+// 	// Now that we know the order could not post, attempt to unmarshal the response into an IPostOrderWarn.
+// 	err = xml.Unmarshal(body, &warn)
+// 	if err != nil {
+// 		return IPostOrder{}, fmt.Errorf("got invalid order response: %s (%s)", Render(order), err.Error())
+// 	}
 
-	if err != nil {
-		return IPostOrder{}, fmt.Errorf("got invalid order response: %s (%s)", Render(order), err.Error())
-	}
+// 	// Handle any additional warnings; perhaps overriding them.
+// 	err = handleWarning(order, &warn)
 
-	// Check if order contained an unhandled error and handle the custom warning code.
-	switch resp.Error {
-	case "Success":
-		// Order successfully posted as-is. Woohoo!
-		return resp, nil
-	case "We are not currently accepting Market orders for this security. Please change your order to a Limit order.":
-		warn.Warning.Text = resp.Error
-		warn.Warning.Code = NoMarketOrder1
-	case "We are not currently accepting Market or Stop orders. Please place a Limit order.":
-		warn.Warning.Text = resp.Error
-		warn.Warning.Code = NoMarketOrder2
-	case "Due to nightly processing we are unable to accept orders between 11:30 PM and 12:00 AM EST. Please replace your order after 12:00 AM .":
-		warn.Warning.Text = resp.Error
-		warn.Warning.Code = MaintenanceWindow
-	}
+// 	if err == nil {
+// 		if order.Transmit {
+// 			return postOverride(order)
+// 		}
+// 	}
 
-	if warn.Warning.Code >= 2000 {
-		err = handleWarning(order, &warn)
-		if err != nil {
-			return resp, err
-		}
-	}
-
-	// Now that we know the order could not post, attempt to unmarshal the response into an IPostOrderWarn.
-	err = xml.Unmarshal(body, &warn)
-	if err != nil {
-		return IPostOrder{}, fmt.Errorf("got invalid order response: %s (%s)", Render(order), err.Error())
-	}
-
-	// Handle any additional warnings; perhaps overriding them.
-	err = handleWarning(order, &warn)
-
-	if err == nil {
-		if order.Transmit {
-			return postOverride(order)
-		}
-	}
-
-	return resp, err
-}
+// 	return resp, err
+// }
 
 // POST accounts/:id/orders
 func PostCancel(order *Order) (IPostOrder, error) {
