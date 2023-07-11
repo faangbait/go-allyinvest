@@ -126,7 +126,7 @@ func handleWarning(order *Order, preview *IPostPreview) (IPostOrder, error) {
 		}
 	}
 
-	return postOverride(order)
+	return PostOverride(order, true)
 }
 
 // POST accounts/:id/orders
@@ -162,10 +162,12 @@ func PostOrder(order *Order) (IPostOrder, error) {
 
 // POST accounts/:id/orders
 // Post the order, overriding warnings.
-func postOverride(order *Order) (IPostOrder, error) {
-	err := ValidateOrder(order)
-	if err != nil {
-		return IPostOrder{}, err
+func PostOverride(order *Order, validate bool) (IPostOrder, error) {
+	if validate {
+		err := ValidateOrder(order)
+		if err != nil {
+			return IPostOrder{}, err
+		}
 	}
 
 	data, err := xml.Marshal(Render(order))
