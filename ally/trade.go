@@ -29,101 +29,101 @@ func PostPreview(order *Order) (IPostPreview, error) {
 // In other words, if making this a Limit order solves our problem, we do that.
 // Returns an error if can't or won't override the warning; this should abort the trade.
 func handleWarning(order *Order, preview *IPostPreview) (IPostOrder, error) {
-	if preview.WarningText != "" {
-		switch preview.WarningText {
-		case "Please check your Order Status and Holdings pages.  You may have an existing open order or you may be entering a quantity greater than the position you hold in your account.  Please review and replace this order with the revised quantity as needed.":
+	switch preview.Error {
+	case "Success":
+		return PostOverride(order, true)
+	case "Please check your Order Status and Holdings pages.  You may have an existing open order or you may be entering a quantity greater than the position you hold in your account.  Please review and replace this order with the revised quantity as needed.":
+		order.Transmit = false
+		return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", DuplicateOrder)
+
+	case "UnsettledFunds":
+		if !OverrideMap[UnsettledFunds] {
 			order.Transmit = false
-			return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", DuplicateOrder)
-
-		case "UnsettledFunds":
-			if !OverrideMap[UnsettledFunds] {
-				order.Transmit = false
-				return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", UnsettledFunds)
-			}
-
-		case "HigherMarginReq":
-			if !OverrideMap[HigherMarginReq] {
-				order.Transmit = false
-				return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", HigherMarginReq)
-			}
-
-		case "NotMarginable":
-			if !OverrideMap[NotMarginable] {
-				order.Transmit = false
-				return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", NotMarginable)
-			}
-
-		case "MktOrderWhileClosed":
-			if !OverrideMap[MktOrderWhileClosed] {
-				order.Transmit = false
-				return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", MktOrderWhileClosed)
-			}
-			switch order.OrderType {
-			case "MKT", "MOC":
-				order.OrderType = "LMT"
-			case "STP":
-				order.OrderType = "STP LMT"
-			default:
-				return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", MktOrderWhileClosed)
-			}
-
-		case "ExchangeClosed":
-			order.Transmit = false
-			return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", ExchangeClosed)
-
-		case "ForeignSettlementFee":
-			if !OverrideMap[ForeignSettlementFee] {
-				order.Transmit = false
-				return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", ForeignSettlementFee)
-			}
-
-		case "We are not currently accepting Market orders for this security. Please change your order to a Limit order.":
-			if !OverrideMap[NoMarketOrder1] {
-				order.Transmit = false
-				return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", NoMarketOrder1)
-			}
-			switch order.OrderType {
-			case "MKT", "MOC":
-				order.OrderType = "LMT"
-			case "STP":
-				order.OrderType = "STP LMT"
-			default:
-				return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", NoMarketOrder1)
-			}
-
-		case "We are not currently accepting Market or Stop orders. Please place a Limit order.":
-			if !OverrideMap[NoMarketOrder2] {
-				order.Transmit = false
-				return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", NoMarketOrder2)
-			}
-			switch order.OrderType {
-			case "MKT", "MOC":
-				order.OrderType = "LMT"
-			case "STP":
-				order.OrderType = "STP LMT"
-			default:
-				return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", NoMarketOrder2)
-			}
-
-		case "Due to nightly processing we are unable to accept orders between 11:30 PM and 12:00 AM EST. Please replace your order after 12:00 AM .":
-			return IPostOrder{}, fmt.Errorf("tried to place order during maintenance window")
-
-		case "This is a Pinksheet or over-the-counter (OTC) security.  Stop and Stop Limit orders are not available for this security.  Please use a Limit order.":
-			if !OverrideMap[NoStopLimitOrders] || order.OrderType == "STP" {
-				order.Transmit = false
-				return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", NoStopLimitOrders)
-			}
-			order.OrderType = "LMT"
-
-		case "You are placing a stop order on the wrong side of the market by either (1) purchasing at a price below the current Ask price or (2) selling at a price above the current Bid price.  Please adjust your Stop price based on the current quote.", "For stop-limit order, limit price should be equal or above stop price for buys, and equal or below stop price for sells.", "The limit price you have entered is too aggressive either buying at a limit above the Ask, or selling at a limit below the Bid.  Please adjust your price.":
-			if !OverrideMap[WrongDirectionTrade] {
-				order.Transmit = false
-				return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", WrongDirectionTrade)
-			}
-
-		default:
-			return IPostOrder{}, fmt.Errorf("error text %s; no override implemented", preview.WarningText)
+			return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", UnsettledFunds)
 		}
+
+	case "HigherMarginReq":
+		if !OverrideMap[HigherMarginReq] {
+			order.Transmit = false
+			return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", HigherMarginReq)
+		}
+
+	case "NotMarginable":
+		if !OverrideMap[NotMarginable] {
+			order.Transmit = false
+			return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", NotMarginable)
+		}
+
+	case "MktOrderWhileClosed":
+		if !OverrideMap[MktOrderWhileClosed] {
+			order.Transmit = false
+			return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", MktOrderWhileClosed)
+		}
+		switch order.OrderType {
+		case "MKT", "MOC":
+			order.OrderType = "LMT"
+		case "STP":
+			order.OrderType = "STP LMT"
+		default:
+			return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", MktOrderWhileClosed)
+		}
+
+	case "ExchangeClosed":
+		order.Transmit = false
+		return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", ExchangeClosed)
+
+	case "ForeignSettlementFee":
+		if !OverrideMap[ForeignSettlementFee] {
+			order.Transmit = false
+			return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", ForeignSettlementFee)
+		}
+
+	case "We are not currently accepting Market orders for this security. Please change your order to a Limit order.":
+		if !OverrideMap[NoMarketOrder1] {
+			order.Transmit = false
+			return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", NoMarketOrder1)
+		}
+		switch order.OrderType {
+		case "MKT", "MOC":
+			order.OrderType = "LMT"
+		case "STP":
+			order.OrderType = "STP LMT"
+		default:
+			return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", NoMarketOrder1)
+		}
+
+	case "We are not currently accepting Market or Stop orders. Please place a Limit order.":
+		if !OverrideMap[NoMarketOrder2] {
+			order.Transmit = false
+			return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", NoMarketOrder2)
+		}
+		switch order.OrderType {
+		case "MKT", "MOC":
+			order.OrderType = "LMT"
+		case "STP":
+			order.OrderType = "STP LMT"
+		default:
+			return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", NoMarketOrder2)
+		}
+
+	case "Due to nightly processing we are unable to accept orders between 11:30 PM and 12:00 AM EST. Please replace your order after 12:00 AM .":
+		return IPostOrder{}, fmt.Errorf("tried to place order during maintenance window")
+
+	case "This is a Pinksheet or over-the-counter (OTC) security.  Stop and Stop Limit orders are not available for this security.  Please use a Limit order.":
+		if !OverrideMap[NoStopLimitOrders] || order.OrderType == "STP" {
+			order.Transmit = false
+			return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", NoStopLimitOrders)
+		}
+		order.OrderType = "LMT"
+
+	case "You are placing a stop order on the wrong side of the market by either (1) purchasing at a price below the current Ask price or (2) selling at a price above the current Bid price.  Please adjust your Stop price based on the current quote.", "For stop-limit order, limit price should be equal or above stop price for buys, and equal or below stop price for sells.", "The limit price you have entered is too aggressive either buying at a limit above the Ask, or selling at a limit below the Bid.  Please adjust your price.":
+		if !OverrideMap[WrongDirectionTrade] {
+			order.Transmit = false
+			return IPostOrder{}, fmt.Errorf("error code %d; couldn't override", WrongDirectionTrade)
+		}
+
+	default:
+		return IPostOrder{}, fmt.Errorf("error text %s; no override implemented", preview.WarningText)
 	}
 
 	return PostOverride(order, true)
