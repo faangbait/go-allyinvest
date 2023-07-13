@@ -52,7 +52,7 @@ type fixmlResp struct {
 	Side      int           `xml:"Side,attr"`
 	AcctTyp   int           `xml:"AcctTyp,attr"`
 	Acct      string        `xml:"Acct,attr"`
-	Stat      int           `xml:"Stat,attr"`
+	Stat      string        `xml:"Stat,attr"`
 	ID        string        `xml:"ID,attr"`
 	OrdID     string        `xml:"OrdID,attr"`
 	Instrmt   fixmlInstrmt  `xml:"Instrmt,omitempty"`
